@@ -1,28 +1,15 @@
 'use client'
 
 import { useFormState, useFormStatus } from 'react-dom'
-import { signup } from '@/app/signup/actions'
+import { signup } from '@/app/(server)/auth'
 import Link from 'next/link'
-import { useEffect } from 'react'
-import { toast } from 'sonner'
 import { IconSpinner } from './ui/icons'
-import { getMessageFromCode } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
 
 export default function SignupForm() {
   const router = useRouter()
+  // @ts-expect-error (will sort later)
   const [result, dispatch] = useFormState(signup, undefined)
-
-  useEffect(() => {
-    if (result) {
-      if (result.type === 'error') {
-        toast.error(getMessageFromCode(result.resultCode))
-      } else {
-        toast.success(getMessageFromCode(result.resultCode))
-        router.refresh()
-      }
-    }
-  }, [result, router])
 
   return (
     <form

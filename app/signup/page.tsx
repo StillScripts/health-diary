@@ -1,12 +1,11 @@
-import { auth } from '@/auth'
 import SignupForm from '@/components/signup-form'
-import { Session } from '@/lib/types'
+import { getServerUser } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 
 export default async function SignupPage() {
-  const session = (await auth()) as Session
+  const session = await getServerUser()
 
-  if (session) {
+  if (session?.data?.user) {
     redirect('/')
   }
 

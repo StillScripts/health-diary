@@ -1,30 +1,24 @@
 import * as React from 'react'
 import Link from 'next/link'
 
-import { cn } from '@/lib/utils'
-import { auth } from '@/auth'
-import { Button, buttonVariants } from '@/components/ui/button'
-import {
-  IconGitHub,
-  IconNextChat,
-  IconSeparator,
-  IconVercel
-} from '@/components/ui/icons'
+import { Button } from '@/components/ui/button'
+import { IconNextChat, IconSeparator } from '@/components/ui/icons'
 import { UserMenu } from '@/components/user-menu'
 import { SidebarMobile } from './sidebar-mobile'
 import { SidebarToggle } from './sidebar-toggle'
 import { ChatHistory } from './chat-history'
-import { Session } from '@/lib/types'
 import { ThemeToggle } from './theme-toggle'
+import { getServerUser } from '@/lib/supabase/server'
 
 async function UserOrLogin() {
-  const session = (await auth()) as Session
+  const serverUser = await getServerUser()
+  const session = serverUser?.data
   return (
     <>
       {session?.user ? (
         <>
           <SidebarMobile>
-            <ChatHistory userId={session.user.id} />
+            <ChatHistory userId={session.user?.id} />
           </SidebarMobile>
           <SidebarToggle />
         </>
@@ -37,6 +31,7 @@ async function UserOrLogin() {
       <div className="flex items-center">
         <IconSeparator className="size-6 text-muted-foreground/50" />
         {session?.user ? (
+          // @ts-expect-error
           <UserMenu user={session.user} />
         ) : (
           <Button variant="link" asChild className="-ml-2">

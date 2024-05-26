@@ -34,7 +34,7 @@ import {
 import { saveChat } from '@/app/actions'
 import { SpinnerMessage, UserMessage } from '@/components/stocks/message'
 import { Chat, Message } from '@/lib/types'
-import { auth } from '@/auth'
+import { getServerUser } from '@/lib/supabase/server'
 
 async function confirmPurchase(symbol: string, price: number, amount: number) {
   'use server'
@@ -503,9 +503,9 @@ export const AI = createAI<AIState, UIState>({
   onGetUIState: async () => {
     'use server'
 
-    const session = await auth()
+    const session = await getServerUser()
 
-    if (session && session.user) {
+    if (session && session?.data?.user) {
       const aiState = getAIState()
 
       if (aiState) {
@@ -518,14 +518,13 @@ export const AI = createAI<AIState, UIState>({
   },
   onSetAIState: async ({ state }) => {
     'use server'
+    const session = await getServerUser()
 
-    const session = await auth()
-
-    if (session && session.user) {
+    if (session && session?.data?.user) {
       const { chatId, messages } = state
 
       const createdAt = new Date()
-      const userId = session.user.id as string
+      const userId = session.data.user.id as string
       const path = `/chat/${chatId}`
 
       const firstMessageContent = messages[0].content as string
