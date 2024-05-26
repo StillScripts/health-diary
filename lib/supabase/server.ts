@@ -34,3 +34,10 @@ export function createClient() {
     }
   )
 }
+
+export async function getServerUser() {
+  const supabase = createClient()
+  return await supabase.auth.getUser()
+}
+
+export type SupabaseSession = Awaited<ReturnType<typeof getServerUser>>['data']

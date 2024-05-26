@@ -57,3 +57,10 @@ export async function signup(
   revalidatePath('/', 'layout')
   redirect('/')
 }
+
+export async function signOut() {
+  const supabase = createClient()
+  supabase.auth.signOut()
+  revalidatePath('/', 'layout')
+  redirect('/')
+}
