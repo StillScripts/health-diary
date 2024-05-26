@@ -25,7 +25,8 @@ const createdAndUpdated = {
 /** Table for storing extra data on users. The id matches the auth id */
 export const users = pgTable('users', {
   id: uuid('id').primaryKey(),
-  fullName: text('full_name')
+  firstName: varchar('first_name'),
+  lastName: varchar('last_name')
 })
 
 /** Table for storing a single exercise event, like swimming 50 laps of 25m pool  */
