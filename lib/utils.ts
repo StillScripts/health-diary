@@ -87,3 +87,9 @@ export const getMessageFromCode = (resultCode: string) => {
       return 'Logged in!'
   }
 }
+
+export type ActionStatus = {
+  error?: boolean
+  success?: boolean
+  id?: string | null
+}
