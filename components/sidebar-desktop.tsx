@@ -1,12 +1,12 @@
 import { Sidebar } from '@/components/sidebar'
 
-import { auth } from '@/auth'
 import { ChatHistory } from '@/components/chat-history'
+import { getServerUser } from '@/lib/supabase/server'
 
 export async function SidebarDesktop() {
-  const session = await auth()
+  const session = await getServerUser()
 
-  if (!session?.user?.id) {
+  if (!session?.data?.user?.id) {
     return null
   }
 
