@@ -1,3 +1,4 @@
+import ExerciseSessionForm from '@/app/(exercises)/_components/exercise-session-form'
 import { db } from '@/db/connection'
 import { exerciseEvents } from '@/db/schema'
 import { getServerUser } from '@/lib/supabase/server'
@@ -15,7 +16,11 @@ const EditExerciseEvent = async ({ params }: { params: { id: string } }) => {
     with: { exerciseSets: true }
   })
 
-  return <div className="p-12">{JSON.stringify(currentExerciseSession)}</div>
+  return (
+    <div className="p-12">
+      <ExerciseSessionForm />
+    </div>
+  )
 }
 
 export default EditExerciseEvent
