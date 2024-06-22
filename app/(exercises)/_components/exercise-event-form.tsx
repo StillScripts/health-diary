@@ -32,10 +32,12 @@ import { Textarea } from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
 import {
   type ExerciseEvent,
-  updateExerciseEvent,
-  exerciseEventSchema,
-  type ExerciseEventSchema
+  updateExerciseEvent
 } from '@/app/(server)/actions/exercise-events'
+import {
+  type ExerciseEventSchema,
+  exerciseEventSchema
+} from '@/lib/validators/exercise-event-validator'
 
 const getHoursAndMinutes = (date?: Date | null) => {
   if (!date) {
