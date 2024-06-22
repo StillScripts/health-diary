@@ -48,6 +48,8 @@ export function ExerciseSetsForm({
     }
   )
 
+  const sets = form.watch('sets')
+
   async function onSubmit(data: ExerciseSetSchema) {
     //await updateExercise(data)
     alert(JSON.stringify(data))
@@ -78,7 +80,7 @@ export function ExerciseSetsForm({
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select a verified email to display" />
+                            <SelectValue placeholder="Select an exercise" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -93,33 +95,37 @@ export function ExerciseSetsForm({
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name={`sets.${index}.weight`}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Weight</FormLabel>
-                      <FormControl>
-                        <Input placeholder="10kg" {...field} />
-                      </FormControl>
+                {sets[index].activity_type === 'Weights' && (
+                  <FormField
+                    control={form.control}
+                    name={`sets.${index}.weight`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Weight</FormLabel>
+                        <FormControl>
+                          <Input placeholder="10kg" {...field} />
+                        </FormControl>
 
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name={`sets.${index}.distance`}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Distance</FormLabel>
-                      <FormControl>
-                        <Input placeholder="2 km" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
+                {sets[index].activity_type === 'Distance' && (
+                  <FormField
+                    control={form.control}
+                    name={`sets.${index}.distance`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Distance</FormLabel>
+                        <FormControl>
+                          <Input placeholder="2 km" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
               </Fragment>
             ))}
             <Button

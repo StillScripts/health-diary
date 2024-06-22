@@ -23,6 +23,7 @@ export default async function Exercises() {
             <TableRow>
               <TableHead className="w-[100px]">Title</TableHead>
               <TableHead>Description</TableHead>
+              <TableHead>Activity Type</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -30,6 +31,7 @@ export default async function Exercises() {
               <TableRow key={exercise.id}>
                 <TableCell className="font-medium">{exercise.title}</TableCell>
                 <TableCell>{exercise.description}</TableCell>
+                <TableCell>{exercise.activityType}</TableCell>
               </TableRow>
             ))}
           </TableBody>

@@ -23,9 +23,17 @@ import { Textarea } from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
 import {
   type ExerciseSchema,
-  exerciseSchema
+  exerciseSchema,
+  activityTypes
 } from '@/lib/validators/exercise-validator'
 import { updateExercise, type Exercise } from '@/app/(server)/actions/exercises'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select'
 
 export function ExerciseForm({
   exercise
@@ -82,6 +90,33 @@ export function ExerciseForm({
                   <FormDescription>
                     Describe this exercise (optional).
                   </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name={'activityType'}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Activity Type</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select an activity type" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {activityTypes.map(activity => (
+                        <SelectItem key={activity} value={activity}>
+                          {activity}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
