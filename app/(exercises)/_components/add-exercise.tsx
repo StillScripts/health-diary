@@ -1,7 +1,7 @@
 'use client'
 
 import { createExercise } from '@/app/(server)/actions/exercises'
-import { Button } from '@/components/ui/button'
+import { PendingButton } from '@/components/pending-button'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { useFormState } from 'react-dom'
@@ -20,7 +20,7 @@ export const AddExerciseButton = () => {
 
   return (
     <form action={dispatch}>
-      <Button>Create Exercise</Button>
+      <PendingButton>Create Exercise</PendingButton>
     </form>
   )
 }
