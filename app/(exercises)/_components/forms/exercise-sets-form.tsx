@@ -43,12 +43,11 @@ export function ExerciseSetsForm({
     resolver: zodResolver(exerciseSetSchema)
   })
   const { fields, append } = useFieldArray({
-    control: form.control, // control props comes from useForm (optional: if you are using FormContext)
-    name: 'sets' // unique name for your Field Array
+    control: form.control,
+    name: 'sets'
   })
 
   async function onSubmit(data: ExerciseSetSchema) {
-    //await updateExercise(data)
     alert(JSON.stringify(data))
   }
 
