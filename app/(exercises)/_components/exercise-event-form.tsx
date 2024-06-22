@@ -15,10 +15,8 @@ import {
   PopoverTrigger
 } from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
-import { exerciseEventSchema } from '@/lib/validators/exercise-event'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format } from 'date-fns'
-import { z } from 'zod'
 import { CalendarIcon } from '@radix-ui/react-icons'
 import { Calendar } from '@/components/ui/calendar'
 import {
@@ -34,10 +32,10 @@ import { Textarea } from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
 import {
   type ExerciseEvent,
-  updateExerciseEvent
+  updateExerciseEvent,
+  exerciseEventSchema,
+  type ExerciseEventSchema
 } from '@/app/(server)/actions/exercise-events'
-
-type Schema = z.infer<typeof exerciseEventSchema>
 
 const getHoursAndMinutes = (date?: Date | null) => {
   if (!date) {
@@ -56,17 +54,17 @@ export function ExerciseEventForm({
   const start = exerciseEvent?.startTime
   const date = start ? new Date(start) : new Date()
 
-  const form = useForm<Schema>({
+  const form = useForm<ExerciseEventSchema>({
     resolver: zodResolver(exerciseEventSchema),
     defaultValues: {
       date,
       startTime: getHoursAndMinutes(date),
       endTime: getHoursAndMinutes(exerciseEvent?.endTime),
-      notes: exerciseEvent?.notes
+      notes: exerciseEvent?.notes ?? undefined
     }
   })
 
-  async function onSubmit(data: Schema) {
+  async function onSubmit(data: ExerciseEventSchema) {
     await updateExerciseEvent({ ...data, id: exerciseEvent!.id! })
   }
 
