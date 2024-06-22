@@ -5,6 +5,8 @@ import { exercises } from '@/db/schema'
 import { getServerUser } from '@/lib/supabase/server'
 import { eq } from 'drizzle-orm'
 import { nanoid, type ActionStatus } from '@/lib/utils'
+import { ExerciseSchema } from '@/lib/validators/exercise-validator'
+import { revalidatePath } from 'next/cache'
 
 export const getExercise = async ({ id }: { id: string }) => {
   return await db.query.exercises.findFirst({
@@ -44,5 +46,28 @@ export const createExercise = async (
       // @ts-expect-error
       error: error.message
     }
+  }
+}
+
+export const updateExercise = async ({
+  title,
+  description,
+  id
+}: ExerciseSchema & { id: string }) => {
+  const session = await getServerUser()
+  if (!session?.data?.user?.id) {
+    throw new Error('Unauthorised')
+  }
+
+  const response = await db
+    .update(exercises)
+    .set({ title, description })
+    .where(eq(exercises.id, id))
+    .returning({ updatedId: exercises.id })
+
+  if (response[0].updatedId) {
+    revalidatePath(`/exercise/${response[0].updatedId}/edit`, 'page')
+  } else {
+    throw new Error('An error occurred')
   }
 }

@@ -25,9 +25,13 @@ import {
   type ExerciseSchema,
   exerciseSchema
 } from '@/lib/validators/exercise-validator'
-import { type Exercise } from '@/app/(server)/actions/exercises'
+import { updateExercise, type Exercise } from '@/app/(server)/actions/exercises'
 
-export function ExerciseForm({ exercise }: { exercise: Exercise }) {
+export function ExerciseForm({
+  exercise
+}: {
+  exercise: NonNullable<Exercise>
+}) {
   const form = useForm<ExerciseSchema>({
     resolver: zodResolver(exerciseSchema),
     defaultValues: {
@@ -37,7 +41,7 @@ export function ExerciseForm({ exercise }: { exercise: Exercise }) {
   })
 
   async function onSubmit(data: ExerciseSchema) {
-    alert(JSON.stringify(data))
+    await updateExercise({ ...data, id: exercise.id })
   }
 
   return (
@@ -74,7 +78,9 @@ export function ExerciseForm({ exercise }: { exercise: Exercise }) {
                   <FormControl>
                     <Textarea placeholder="Notes..." {...field} />
                   </FormControl>
-                  <FormDescription>Describe this exercise.</FormDescription>
+                  <FormDescription>
+                    Describe this exercise (optional).
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
