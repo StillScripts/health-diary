@@ -35,13 +35,14 @@ export function ExerciseForm({
   const form = useForm<ExerciseSchema>({
     resolver: zodResolver(exerciseSchema),
     defaultValues: {
+      id: exercise.id,
       title: exercise?.title ?? '',
-      description: exercise?.title ?? ''
+      description: exercise?.description ?? ''
     }
   })
 
   async function onSubmit(data: ExerciseSchema) {
-    await updateExercise({ ...data, id: exercise.id })
+    await updateExercise(data)
   }
 
   return (

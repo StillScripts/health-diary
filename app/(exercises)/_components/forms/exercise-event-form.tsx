@@ -51,7 +51,7 @@ const getHoursAndMinutes = (date?: Date | null) => {
 export function ExerciseEventForm({
   exerciseEvent
 }: {
-  exerciseEvent: ExerciseEvent
+  exerciseEvent: NonNullable<ExerciseEvent>
 }) {
   const start = exerciseEvent?.startTime
   const date = start ? new Date(start) : new Date()
@@ -59,6 +59,7 @@ export function ExerciseEventForm({
   const form = useForm<ExerciseEventSchema>({
     resolver: zodResolver(exerciseEventSchema),
     defaultValues: {
+      id: exerciseEvent.id,
       date,
       startTime: getHoursAndMinutes(date),
       endTime: getHoursAndMinutes(exerciseEvent?.endTime),
@@ -67,7 +68,7 @@ export function ExerciseEventForm({
   })
 
   async function onSubmit(data: ExerciseEventSchema) {
-    await updateExerciseEvent({ ...data, id: exerciseEvent!.id! })
+    await updateExerciseEvent(data)
   }
 
   return (

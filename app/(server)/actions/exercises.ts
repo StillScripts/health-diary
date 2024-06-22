@@ -16,6 +16,10 @@ export const getExercise = async ({ id }: { id: string }) => {
 
 export type Exercise = Awaited<ReturnType<typeof getExercise>>
 
+export const getExercises = async () => {
+  return await db.query.exercises.findMany()
+}
+
 export const createExercise = async (
   state: ActionStatus,
   formData: FormData
