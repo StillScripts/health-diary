@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -18,31 +17,40 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card'
-import { useForm } from 'react-hook-form'
-import { Textarea } from '@/components/ui/textarea'
+import { useFieldArray, useForm } from 'react-hook-form'
 import { Input } from '@/components/ui/input'
+import { type Exercise } from '@/app/(server)/actions/exercises'
 import {
-  type ExerciseSchema,
-  exerciseSchema
-} from '@/lib/validators/exercise-validator'
-import { updateExercise, type Exercise } from '@/app/(server)/actions/exercises'
+  exerciseSetSchema,
+  type ExerciseSetSchema
+} from '@/lib/validators/exercise-set-validator'
+import { Fragment } from 'react'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select'
 
-export function ExerciseForm({
-  exercise
+export function ExerciseSetsForm({
+  exercises
 }: {
-  exercise: NonNullable<Exercise>
+  exercises: Array<NonNullable<Exercise>>
 }) {
-  const form = useForm<ExerciseSchema>({
-    resolver: zodResolver(exerciseSchema),
-    defaultValues: {
-      id: exercise.id,
-      title: exercise?.title ?? '',
-      description: exercise?.description ?? ''
-    }
+  const form = useForm<ExerciseSetSchema>({
+    resolver: zodResolver(exerciseSetSchema)
   })
+  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
+    {
+      control: form.control, // control props comes from useForm (optional: if you are using FormContext)
+      name: 'sets' // unique name for your Field Array
+    }
+  )
 
-  async function onSubmit(data: ExerciseSchema) {
-    await updateExercise(data)
+  async function onSubmit(data: ExerciseSetSchema) {
+    //await updateExercise(data)
+    alert(JSON.stringify(data))
   }
 
   return (
@@ -56,36 +64,79 @@ export function ExerciseForm({
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Title</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Title..." {...field} />
-                  </FormControl>
+            {fields.map((field, index) => (
+              <Fragment key={index}>
+                <FormField
+                  control={form.control}
+                  name={`sets.${index}.exercise_id`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Exercise</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a verified email to display" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {exercises.map(exercise => (
+                            <SelectItem key={exercise.id} value={exercise.id}>
+                              {exercise.title}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name={`sets.${index}.weight`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Weight</FormLabel>
+                      <FormControl>
+                        <Input placeholder="10kg" {...field} />
+                      </FormControl>
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Textarea placeholder="Notes..." {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    Describe this exercise (optional).
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name={`sets.${index}.distance`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Distance</FormLabel>
+                      <FormControl>
+                        <Input placeholder="2 km" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </Fragment>
+            ))}
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() =>
+                append({
+                  exercise_id: '123',
+                  distance: '',
+                  reps: 0,
+                  weight: '',
+                  activity_type: 'Body Weights'
+                })
+              }
+            >
+              Add
+            </Button>
           </CardContent>
           <CardFooter className="flex justify-end">
             <Button>Save</Button>

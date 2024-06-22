@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/select'
 import { IconPlus } from '@/components/ui/icons'
 import type { Exercise } from '@/app/(server)/actions/exercises'
+import { ExerciseSetsForm } from './forms/exercise-sets-form'
 
 export default function ExerciseSessionForm({
   exerciseEvent,
@@ -43,62 +44,7 @@ export default function ExerciseSessionForm({
         <ExerciseEventForm exerciseEvent={exerciseEvent} />
       </TabsContent>
       <TabsContent value={TABS[1]}>
-        <Card className="w-full max-w-md mx-auto">
-          <CardHeader>
-            <CardTitle>Gym Session</CardTitle>
-            <CardDescription>
-              Record the details of your workout.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="date">Date</Label>
-                <Input type="date" id="date" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="workout-type">Workout Type</Label>
-                <Select>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select workout type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {exercises.map(exercise => (
-                      <SelectItem key={exercise.id} value={exercise.id}>
-                        {exercise.title}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="exercises">Exercises</Label>
-              <div className="grid gap-4">
-                <div className="flex items-center gap-2">
-                  <Input
-                    type="text"
-                    id="exercise-name"
-                    placeholder="Exercise Name"
-                  />
-                  <Input
-                    type="number"
-                    id="exercise-reps"
-                    min="0"
-                    placeholder="Reps"
-                  />
-                  <Button variant="ghost" size="icon">
-                    <IconPlus className="size-4" />
-                    <span className="sr-only">Add Exercise</span>
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-          <CardFooter className="flex justify-end">
-            <Button>Save</Button>
-          </CardFooter>
-        </Card>
+        <ExerciseSetsForm exercises={exercises} />
       </TabsContent>
     </Tabs>
   )
