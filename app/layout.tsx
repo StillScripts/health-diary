@@ -11,7 +11,7 @@ import { Toaster } from '@/components/ui/sonner'
 export const metadata = {
   metadataBase: process.env.VERCEL_URL
     ? new URL(`https://${process.env.VERCEL_URL}`)
-    : undefined,
+    : new URL('https://acme.com'),
   title: {
     default: 'Next.js AI Chatbot',
     template: `%s - Next.js AI Chatbot`
