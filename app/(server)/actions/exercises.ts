@@ -4,8 +4,7 @@ import { db } from '@/db/connection'
 import { exercises } from '@/db/schema'
 import { getServerUser } from '@/lib/supabase/server'
 import { eq } from 'drizzle-orm'
-import { v4 as uuidv4 } from 'uuid'
-import { type ActionStatus } from '@/lib/utils'
+import { nanoid, type ActionStatus } from '@/lib/utils'
 
 export const getExercise = async ({ id }: { id: string }) => {
   return await db.query.exercises.findFirst({
@@ -20,7 +19,7 @@ export const createExercise = async (
   formData: FormData
 ) => {
   try {
-    const id = uuidv4()
+    const id = `ex_${nanoid(10)}`
 
     const session = await getServerUser()
     if (!session?.data?.user?.id) {
@@ -42,7 +41,8 @@ export const createExercise = async (
     }
   } catch (error) {
     return {
-      error: true
+      // @ts-expect-error
+      error: error.message
     }
   }
 }
