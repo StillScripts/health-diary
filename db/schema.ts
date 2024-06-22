@@ -2,6 +2,7 @@ import { nanoid } from '@/lib/utils'
 import { relations, sql } from 'drizzle-orm'
 import {
   integer,
+  pgEnum,
   pgTable,
   text,
   timestamp,
@@ -45,6 +46,13 @@ export const exerciseEvents = pgTable('exercise_events', {
     .references(() => users.id)
 })
 
+export const activityTypeEnum = pgEnum('activity_type', [
+  'Body Weight',
+  'Weights',
+  'Distance',
+  'Sport'
+])
+
 /** Table for storing a single exercise type, like swimming */
 export const exercises = pgTable('exercises', {
   id: varchar('id', { length: 13 }) // ex_1234567899
@@ -52,7 +60,8 @@ export const exercises = pgTable('exercises', {
     .primaryKey()
     .$defaultFn(() => `ex_${nanoid(10)}`),
   title: varchar('title'),
-  description: text('description')
+  description: text('description'),
+  activityType: activityTypeEnum('activity_type')
 })
 
 /** Table for storing each set in an exercise session */

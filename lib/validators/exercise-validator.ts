@@ -1,8 +1,11 @@
 import { z } from 'zod'
 
+const activityTypes = ['Body Weight', 'Weights', 'Distance', 'Sport'] as const
+
 export const exerciseSchema = z.object({
   id: z.string({ required_error: 'An id is required.' }),
   title: z.string({ required_error: 'A title is required.' }),
+  activityType: z.enum(activityTypes),
   description: z.string({ required_error: 'A description is required.' })
 })
 

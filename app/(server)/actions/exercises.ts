@@ -56,8 +56,9 @@ export const createExercise = async (
 export const updateExercise = async ({
   title,
   description,
+  activityType,
   id
-}: ExerciseSchema & { id: string }) => {
+}: ExerciseSchema) => {
   const session = await getServerUser()
   if (!session?.data?.user?.id) {
     throw new Error('Unauthorised')
@@ -65,7 +66,7 @@ export const updateExercise = async ({
 
   const response = await db
     .update(exercises)
-    .set({ title, description })
+    .set({ title, description, activityType })
     .where(eq(exercises.id, id))
     .returning({ updatedId: exercises.id })
 
