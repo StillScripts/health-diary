@@ -24,7 +24,7 @@ import {
   exerciseSetSchema,
   type ExerciseSetSchema
 } from '@/lib/validators/exercise-set-validator'
-import { Fragment } from 'react'
+import { useCallback } from 'react'
 import {
   Select,
   SelectContent,
@@ -32,6 +32,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
+import { nanoid } from '@/lib/utils'
 
 export function ExerciseSetsForm({
   exercises
@@ -41,19 +42,33 @@ export function ExerciseSetsForm({
   const form = useForm<ExerciseSetSchema>({
     resolver: zodResolver(exerciseSetSchema)
   })
-  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
-    {
-      control: form.control, // control props comes from useForm (optional: if you are using FormContext)
-      name: 'sets' // unique name for your Field Array
-    }
-  )
-
-  const sets = form.watch('sets')
+  const { fields, append } = useFieldArray({
+    control: form.control, // control props comes from useForm (optional: if you are using FormContext)
+    name: 'sets' // unique name for your Field Array
+  })
 
   async function onSubmit(data: ExerciseSetSchema) {
     //await updateExercise(data)
     alert(JSON.stringify(data))
   }
+
+  const getInputsFromActivityType = useCallback(
+    (exerciseId: string): Array<keyof (typeof fields)[number]> => {
+      const exercise = exercises.find(exercise => exercise.id === exerciseId)
+      const activityType = exercise?.activityType
+      switch (activityType) {
+        case 'Body Weight':
+          return ['reps']
+        case 'Weights':
+          return ['reps', 'weight']
+        case 'Distance':
+          return ['distance']
+        default:
+          return []
+      }
+    },
+    [exercises]
+  )
 
   return (
     <Form {...form}>
@@ -66,78 +81,95 @@ export function ExerciseSetsForm({
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {fields.map((field, index) => (
-              <Fragment key={index}>
-                <FormField
-                  control={form.control}
-                  name={`sets.${index}.exercise_id`}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Exercise</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select an exercise" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {exercises.map(exercise => (
-                            <SelectItem key={exercise.id} value={exercise.id}>
-                              {exercise.title}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {sets[index].activity_type === 'Weights' && (
+            {fields.map((field, index) => {
+              const enabledInputs = getInputsFromActivityType(field.exercise_id)
+              return (
+                <div key={index}>
                   <FormField
                     control={form.control}
-                    name={`sets.${index}.weight`}
+                    name={`sets.${index}.exercise_id`}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Weight</FormLabel>
-                        <FormControl>
-                          <Input placeholder="10kg" {...field} />
-                        </FormControl>
+                        <FormLabel>Exercise</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select an exercise" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {exercises.map(exercise => (
+                              <SelectItem key={exercise.id} value={exercise.id}>
+                                {exercise.title}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  {enabledInputs.includes('weight') && (
+                    <FormField
+                      control={form.control}
+                      name={`sets.${index}.weight`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Weight</FormLabel>
+                          <FormControl>
+                            <Input placeholder="10kg" {...field} />
+                          </FormControl>
 
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                )}
-                {sets[index].activity_type === 'Distance' && (
-                  <FormField
-                    control={form.control}
-                    name={`sets.${index}.distance`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Distance</FormLabel>
-                        <FormControl>
-                          <Input placeholder="2 km" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                )}
-              </Fragment>
-            ))}
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                  {enabledInputs.includes('distance') && (
+                    <FormField
+                      control={form.control}
+                      name={`sets.${index}.distance`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Distance</FormLabel>
+                          <FormControl>
+                            <Input placeholder="2 km" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                  {enabledInputs.includes('reps') && (
+                    <FormField
+                      control={form.control}
+                      name={`sets.${index}.reps`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Reps</FormLabel>
+                          <FormControl>
+                            <Input type="number" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                </div>
+              )
+            })}
             <Button
               type="button"
               variant="outline"
               onClick={() =>
                 append({
-                  exercise_id: '123',
+                  exercise_id: `es_${nanoid(10)}`,
                   distance: '',
                   reps: 0,
-                  weight: '',
-                  activity_type: 'Body Weights'
+                  weight: ''
                 })
               }
             >
