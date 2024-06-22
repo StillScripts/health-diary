@@ -1,5 +1,5 @@
 import { getExercises } from '@/app/(server)/actions/exercises'
-import { AddExerciseButton } from '../_components/add-exercise'
+import { AddExerciseButton } from '../_components/buttons/add-exercise'
 import {
   Table,
   TableBody,

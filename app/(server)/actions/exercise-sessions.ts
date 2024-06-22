@@ -3,15 +3,14 @@
 import { db } from '@/db/connection'
 import { exerciseEvents } from '@/db/schema'
 import { getServerUser } from '@/lib/supabase/server'
-import type { ActionStatus } from '@/lib/utils'
-import { v4 as uuidv4 } from 'uuid'
+import { nanoid, type ActionStatus } from '@/lib/utils'
 
 export const createExerciseEvent = async (
   state: ActionStatus,
   formData: FormData
 ) => {
   try {
-    const id = uuidv4()
+    const id = `ee_${nanoid(10)}`
 
     const session = await getServerUser()
     if (!session?.data?.user?.id) {

@@ -22,6 +22,10 @@ export const getExerciseEvent = async ({ id }: { id: string }) => {
 
 export type ExerciseEvent = Awaited<ReturnType<typeof getExerciseEvent>>
 
+export const getExerciseEvents = async () => {
+  return await db.query.exerciseEvents.findMany()
+}
+
 export const updateExerciseEvent = async (
   data: ExerciseEventSchema & { id: string }
 ) => {
