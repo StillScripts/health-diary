@@ -1,5 +1,6 @@
 import ExerciseSessionForm from '@/app/(exercises)/_components/exercise-session-form'
 import { getExerciseEvent } from '@/app/(server)/actions/exercise-events'
+import { getExercises } from '@/app/(server)/actions/exercises'
 import { getServerUser } from '@/lib/supabase/server'
 import { notFound, redirect } from 'next/navigation'
 
@@ -12,6 +13,7 @@ const EditExerciseEvent = async ({ params }: { params: { id: string } }) => {
   }
 
   const exerciseEvent = await getExerciseEvent({ id: params.id })
+  const exercises = await getExercises()
 
   if (!exerciseEvent?.id) {
     notFound()
@@ -19,7 +21,10 @@ const EditExerciseEvent = async ({ params }: { params: { id: string } }) => {
 
   return (
     <div className="p-12">
-      <ExerciseSessionForm exerciseEvent={exerciseEvent} />
+      <ExerciseSessionForm
+        exerciseEvent={exerciseEvent}
+        exercises={exercises}
+      />
     </div>
   )
 }
