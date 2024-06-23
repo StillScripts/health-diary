@@ -46,50 +46,26 @@ export const ExerciseSidebar = () => {
         <Tooltip>
           <TooltipTrigger asChild>
             <Link
-              href="#"
+              href="/exercises"
               className="flex size-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:size-8"
             >
               <ShoppingCart className="size-5" />
-              <span className="sr-only">Orders</span>
+              <span className="sr-only">Exercises</span>
             </Link>
           </TooltipTrigger>
-          <TooltipContent side="right">Orders</TooltipContent>
+          <TooltipContent side="right">Exercises</TooltipContent>
         </Tooltip>
         <Tooltip>
           <TooltipTrigger asChild>
             <Link
-              href="#"
+              href="/exercise-sessions"
               className="flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:size-8"
             >
               <Package className="size-5" />
-              <span className="sr-only">Products</span>
+              <span className="sr-only">Exercise Sessions</span>
             </Link>
           </TooltipTrigger>
-          <TooltipContent side="right">Products</TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link
-              href="#"
-              className="flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:size-8"
-            >
-              <Users2 className="size-5" />
-              <span className="sr-only">Customers</span>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent side="right">Customers</TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link
-              href="#"
-              className="flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:size-8"
-            >
-              <LineChart className="size-5" />
-              <span className="sr-only">Analytics</span>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent side="right">Analytics</TooltipContent>
+          <TooltipContent side="right">Exercise Sessions</TooltipContent>
         </Tooltip>
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">

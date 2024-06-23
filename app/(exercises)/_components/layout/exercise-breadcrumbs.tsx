@@ -1,3 +1,4 @@
+'use client'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -6,9 +7,34 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator
 } from '@/components/ui/breadcrumb'
+import { Route } from 'next'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { Fragment } from 'react'
 
 export const ExerciseBreadcrumbs = () => {
+  const pathname = usePathname()
+
+  let breadcrumbs: Array<{ href?: Route; name: string }> = []
+
+  if (pathname?.endsWith('exercises')) {
+    breadcrumbs.push({ name: 'Exercises' })
+  } else if (pathname?.endsWith('exercise-sessions')) {
+    breadcrumbs.push({ name: 'Exercise Session' })
+  } else {
+    if (pathname?.includes('exercises/')) {
+      breadcrumbs.push({ name: 'Exercises', href: '/exercises' })
+    } else if (pathname?.includes('exercise-sessions/')) {
+      breadcrumbs.push({
+        name: 'Exercise Sessions',
+        href: '/exercise-sessions'
+      })
+    }
+    if (pathname?.endsWith('edit')) {
+      breadcrumbs.push({ name: 'Edit' })
+    }
+  }
+
   return (
     <Breadcrumb className="hidden md:flex">
       <BreadcrumbList>
@@ -17,16 +43,22 @@ export const ExerciseBreadcrumbs = () => {
             <Link href="/">Home</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
-        <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <BreadcrumbLink asChild>
-            <Link href="/exercise-sessions">Exercise Sessions</Link>
-          </BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <BreadcrumbPage>Edit</BreadcrumbPage>
-        </BreadcrumbItem>
+        {breadcrumbs.map(breadcrumb => (
+          <Fragment key={breadcrumb.name}>
+            <BreadcrumbSeparator />
+            {breadcrumb?.href ? (
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link href={breadcrumb.href}>{breadcrumb.name}</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+            ) : (
+              <BreadcrumbItem>
+                <BreadcrumbPage>{breadcrumb.name}</BreadcrumbPage>
+              </BreadcrumbItem>
+            )}
+          </Fragment>
+        ))}
       </BreadcrumbList>
     </Breadcrumb>
   )
