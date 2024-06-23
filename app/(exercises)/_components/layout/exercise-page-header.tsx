@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { ChevronLeft } from 'lucide-react'
-import type { Route } from 'next'
+//import type { Route } from 'next'
 import Link from 'next/link'
 
 export const ExercisePageHeader = ({
@@ -13,7 +13,7 @@ export const ExercisePageHeader = ({
   heading: string
   children?: React.ReactNode
   inProgress?: boolean
-  backUrl?: Route
+  backUrl?: string
 }) => {
   return (
     <div className="flex items-center flex-wrap gap-4">

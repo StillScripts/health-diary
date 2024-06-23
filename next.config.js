@@ -9,8 +9,8 @@ module.exports = {
         pathname: '**'
       }
     ]
-  },
-  experimental: {
-    typedRoutes: true
   }
+  // experimental: {
+  //   typedRoutes: true
+  // }
 }

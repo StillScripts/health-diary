@@ -7,7 +7,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator
 } from '@/components/ui/breadcrumb'
-import { Route } from 'next'
+//import { Route } from 'next'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Fragment } from 'react'
@@ -15,7 +15,7 @@ import { Fragment } from 'react'
 export const ExerciseBreadcrumbs = () => {
   const pathname = usePathname()
 
-  let breadcrumbs: Array<{ href?: Route; name: string }> = []
+  let breadcrumbs: Array<{ href?: string; name: string }> = []
 
   if (pathname?.endsWith('exercises')) {
     breadcrumbs.push({ name: 'Exercises' })
