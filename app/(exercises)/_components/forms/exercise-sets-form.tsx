@@ -34,11 +34,14 @@ import {
 } from '@/components/ui/select'
 import { nanoid } from '@/lib/utils'
 import { Separator } from '@/components/ui/separator'
+import { upsertExerciseSets } from '@/app/(server)/actions/exercise-sets'
 
 export function ExerciseSetsForm({
-  exercises
+  exercises,
+  exerciseEventId
 }: {
   exercises: Array<NonNullable<Exercise>>
+  exerciseEventId: string
 }) {
   const form = useForm<ExerciseSetSchema>({
     resolver: zodResolver(exerciseSetSchema)
@@ -52,7 +55,7 @@ export function ExerciseSetsForm({
   >([])
 
   async function onSubmit(data: ExerciseSetSchema) {
-    alert(JSON.stringify(data))
+    await upsertExerciseSets({ ...data, exerciseEventId })
   }
 
   const getInputsFromActivityType = (

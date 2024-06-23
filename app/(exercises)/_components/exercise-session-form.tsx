@@ -44,7 +44,10 @@ export default function ExerciseSessionForm({
         <ExerciseEventForm exerciseEvent={exerciseEvent} />
       </TabsContent>
       <TabsContent value={TABS[1]}>
-        <ExerciseSetsForm exercises={exercises} />
+        <ExerciseSetsForm
+          exercises={exercises}
+          exerciseEventId={exerciseEvent.id}
+        />
       </TabsContent>
     </Tabs>
   )
