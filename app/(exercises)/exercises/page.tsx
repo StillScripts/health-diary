@@ -19,7 +19,6 @@ export default async function Exercises() {
       <ExercisePageHeader heading="Exercises">
         <AddExerciseButton />
       </ExercisePageHeader>
-
       <div className="mt-8">
         <Table>
           <TableCaption>A list of all exercise options.</TableCaption>

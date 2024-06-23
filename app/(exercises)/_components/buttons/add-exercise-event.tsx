@@ -21,7 +21,7 @@ export const AddExerciseEventButton = () => {
 
   return (
     <form action={dispatch}>
-      <PendingButton>Create Exercise Event</PendingButton>
+      <PendingButton size="sm">Record New Session</PendingButton>
     </form>
   )
 }

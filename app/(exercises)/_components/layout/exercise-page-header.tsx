@@ -8,11 +8,11 @@ export const ExercisePageHeader = ({
   inProgress
 }: {
   heading: string
-  children: React.ReactNode
+  children?: React.ReactNode
   inProgress?: boolean
 }) => {
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center flex-wrap gap-4">
       <Button variant="outline" size="icon" className="size-7">
         <ChevronLeft className="size-4" />
         <span className="sr-only">Back</span>
@@ -25,9 +25,9 @@ export const ExercisePageHeader = ({
           In progress
         </Badge>
       )}
-      <div className="hidden items-center gap-2 md:ml-auto md:flex">
-        {children}
-      </div>
+      {children && (
+        <div className="items-center gap-2 md:ml-auto md:flex">{children}</div>
+      )}
     </div>
   )
 }

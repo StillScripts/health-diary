@@ -9,13 +9,17 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table'
+import { ExerciseMainContainer } from '../_components/layout/exercise-main-container'
+import { ExercisePageHeader } from '../_components/layout/exercise-page-header'
 
 export default async function ExercissionSessions() {
   const events = await getExerciseEvents()
   return (
-    <div>
-      <h1>Exercise Sessions</h1>
-      <AddExerciseEventButton />
+    <ExerciseMainContainer>
+      <ExercisePageHeader heading="Exercise Sessions">
+        <AddExerciseEventButton />
+      </ExercisePageHeader>
+
       <div className="mt-8">
         <Table>
           <TableCaption>A list of all exercise events.</TableCaption>
@@ -41,6 +45,6 @@ export default async function ExercissionSessions() {
           </TableBody>
         </Table>
       </div>
-    </div>
+    </ExerciseMainContainer>
   )
 }
