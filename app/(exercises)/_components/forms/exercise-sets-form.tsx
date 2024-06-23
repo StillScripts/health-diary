@@ -24,7 +24,7 @@ import {
   exerciseSetSchema,
   type ExerciseSetSchema
 } from '@/lib/validators/exercise-set-validator'
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 import {
   Select,
   SelectContent,
@@ -35,28 +35,35 @@ import {
 import { nanoid } from '@/lib/utils'
 import { Separator } from '@/components/ui/separator'
 import { upsertExerciseSets } from '@/app/(server)/actions/exercise-sets'
+import type { ExerciseEvent } from '@/app/(server)/actions/exercise-events'
 
 export function ExerciseSetsForm({
   exercises,
+  exerciseSets,
   exerciseEventId
 }: {
   exercises: Array<NonNullable<Exercise>>
+  exerciseSets: NonNullable<ExerciseEvent>['exerciseSets']
   exerciseEventId: string
 }) {
   const form = useForm<ExerciseSetSchema>({
-    resolver: zodResolver(exerciseSetSchema)
+    resolver: zodResolver(exerciseSetSchema),
+    defaultValues: {
+      sets: exerciseSets
+        ? exerciseSets.map(exerciseSet => ({
+            id: exerciseSet.id,
+            exerciseId: exerciseSet.exerciseId!,
+            reps: exerciseSet.reps || undefined,
+            weight: exerciseSet.weight ?? '',
+            distance: exerciseSet.distance ?? ''
+          }))
+        : []
+    }
   })
   const { fields, append } = useFieldArray({
     control: form.control,
     name: 'sets'
   })
-  const [enabledInputs, setEnabledInputs] = useState<
-    Array<keyof (typeof fields)[number]>[]
-  >([])
-
-  async function onSubmit(data: ExerciseSetSchema) {
-    await upsertExerciseSets({ ...data, exerciseEventId })
-  }
 
   const getInputsFromActivityType = (
     exerciseId: string
@@ -73,6 +80,26 @@ export function ExerciseSetsForm({
       default:
         return []
     }
+  }
+
+  const [enabledInputs, setEnabledInputs] = useState<
+    Array<keyof (typeof fields)[number]>[]
+  >(
+    exerciseSets?.length
+      ? exerciseSets.map(exerciseSet =>
+          getInputsFromActivityType(exerciseSet.exerciseId!)
+        )
+      : []
+  )
+
+  async function onSubmit(data: ExerciseSetSchema) {
+    await upsertExerciseSets({ ...data, exerciseEventId })
+      .then(d => {
+        alert(JSON.stringify(d))
+      })
+      .catch(() => {
+        alert('An error occurred')
+      })
   }
 
   const updateEnabledInputs = (exerciseId: string, index: number) => {
@@ -99,7 +126,7 @@ export function ExerciseSetsForm({
                 <div key={index} className="space-y-3">
                   <FormField
                     control={form.control}
-                    name={`sets.${index}.exercise_id`}
+                    name={`sets.${index}.exerciseId`}
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Exercise</FormLabel>
@@ -166,7 +193,7 @@ export function ExerciseSetsForm({
                         <FormItem>
                           <FormLabel>Reps</FormLabel>
                           <FormControl>
-                            <Input type="number" {...field} />
+                            <Input type="number" placeholder="10" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -183,9 +210,9 @@ export function ExerciseSetsForm({
               onClick={() =>
                 append({
                   id: `es_${nanoid(10)}`,
-                  exercise_id: '',
+                  exerciseId: '',
                   distance: '',
-                  reps: 0,
+                  reps: undefined,
                   weight: ''
                 })
               }
