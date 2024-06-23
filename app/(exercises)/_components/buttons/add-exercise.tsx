@@ -20,7 +20,7 @@ export const AddExerciseButton = () => {
 
   return (
     <form action={dispatch}>
-      <PendingButton>Create Exercise</PendingButton>
+      <PendingButton size="sm">Add New Exercise</PendingButton>
     </form>
   )
 }
