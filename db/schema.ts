@@ -71,6 +71,8 @@ export const exerciseSets = pgTable('exercise_sets', {
     .primaryKey()
     .$defaultFn(() => `es_${nanoid(10)}`),
   reps: integer('reps'),
+  weight: varchar('weight'),
+  distance: varchar('distance'),
   // By default it will be an event unless an exercise session is created
   exerciseEventId: varchar('exercise_event_id', { length: 13 }).references(
     () => exerciseEvents.id

@@ -4,7 +4,7 @@ export const exerciseSetSchema = z.object({
   sets: z.array(
     z.object({
       id: z.string(),
-      exercise_id: z.string(),
+      exerciseId: z.string(),
       reps: z.coerce.number().optional(),
       weight: z.string().optional(),
       distance: z.string().optional()
