@@ -24,7 +24,7 @@ import {
   exerciseSetSchema,
   type ExerciseSetSchema
 } from '@/lib/validators/exercise-set-validator'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import {
   Select,
   SelectContent,
@@ -33,6 +33,7 @@ import {
   SelectValue
 } from '@/components/ui/select'
 import { nanoid } from '@/lib/utils'
+import { Separator } from '@/components/ui/separator'
 
 export function ExerciseSetsForm({
   exercises
@@ -46,28 +47,38 @@ export function ExerciseSetsForm({
     control: form.control,
     name: 'sets'
   })
+  const [enabledInputs, setEnabledInputs] = useState<
+    Array<keyof (typeof fields)[number]>[]
+  >([])
 
   async function onSubmit(data: ExerciseSetSchema) {
     alert(JSON.stringify(data))
   }
 
-  const getInputsFromActivityType = useCallback(
-    (exerciseId: string): Array<keyof (typeof fields)[number]> => {
-      const exercise = exercises.find(exercise => exercise.id === exerciseId)
-      const activityType = exercise?.activityType
-      switch (activityType) {
-        case 'Body Weight':
-          return ['reps']
-        case 'Weights':
-          return ['reps', 'weight']
-        case 'Distance':
-          return ['distance']
-        default:
-          return []
-      }
-    },
-    [exercises]
-  )
+  const getInputsFromActivityType = (
+    exerciseId: string
+  ): Array<keyof (typeof fields)[number]> => {
+    const exercise = exercises.find(exercise => exercise.id === exerciseId)
+    const activityType = exercise?.activityType
+    switch (activityType) {
+      case 'Body Weight':
+        return ['reps']
+      case 'Weights':
+        return ['reps', 'weight']
+      case 'Distance':
+        return ['distance']
+      default:
+        return []
+    }
+  }
+
+  const updateEnabledInputs = (exerciseId: string, index: number) => {
+    setEnabledInputs(prevEnabledInputs => {
+      const newEnabledInputs = [...prevEnabledInputs]
+      newEnabledInputs[index] = getInputsFromActivityType(exerciseId)
+      return newEnabledInputs
+    })
+  }
 
   return (
     <Form {...form}>
@@ -81,9 +92,8 @@ export function ExerciseSetsForm({
           </CardHeader>
           <CardContent className="space-y-4">
             {fields.map((field, index) => {
-              const enabledInputs = getInputsFromActivityType(field.exercise_id)
               return (
-                <div key={index}>
+                <div key={index} className="space-y-3">
                   <FormField
                     control={form.control}
                     name={`sets.${index}.exercise_id`}
@@ -91,7 +101,10 @@ export function ExerciseSetsForm({
                       <FormItem>
                         <FormLabel>Exercise</FormLabel>
                         <Select
-                          onValueChange={field.onChange}
+                          onValueChange={value => {
+                            field.onChange(value)
+                            updateEnabledInputs(value, index)
+                          }}
                           defaultValue={field.value}
                         >
                           <FormControl>
@@ -111,7 +124,7 @@ export function ExerciseSetsForm({
                       </FormItem>
                     )}
                   />
-                  {enabledInputs.includes('weight') && (
+                  {enabledInputs[index]?.includes('weight') && (
                     <FormField
                       control={form.control}
                       name={`sets.${index}.weight`}
@@ -127,7 +140,7 @@ export function ExerciseSetsForm({
                       )}
                     />
                   )}
-                  {enabledInputs.includes('distance') && (
+                  {enabledInputs[index]?.includes('distance') && (
                     <FormField
                       control={form.control}
                       name={`sets.${index}.distance`}
@@ -142,7 +155,7 @@ export function ExerciseSetsForm({
                       )}
                     />
                   )}
-                  {enabledInputs.includes('reps') && (
+                  {enabledInputs[index]?.includes('reps') && (
                     <FormField
                       control={form.control}
                       name={`sets.${index}.reps`}
@@ -157,6 +170,7 @@ export function ExerciseSetsForm({
                       )}
                     />
                   )}
+                  <Separator className="mt-2" orientation="horizontal" />
                 </div>
               )
             })}
@@ -165,7 +179,8 @@ export function ExerciseSetsForm({
               variant="outline"
               onClick={() =>
                 append({
-                  exercise_id: `es_${nanoid(10)}`,
+                  id: `es_${nanoid(10)}`,
+                  exercise_id: '',
                   distance: '',
                   reps: 0,
                   weight: ''
