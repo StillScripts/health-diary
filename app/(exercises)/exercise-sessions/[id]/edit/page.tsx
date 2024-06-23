@@ -1,4 +1,6 @@
 import ExerciseSessionForm from '@/app/(exercises)/_components/exercise-session-form'
+import { ExerciseMainContainer } from '@/app/(exercises)/_components/layout/exercise-main-container'
+import { ExercisePageHeader } from '@/app/(exercises)/_components/layout/exercise-page-header'
 import { getExerciseEvent } from '@/app/(server)/actions/exercise-events'
 import { getExercises } from '@/app/(server)/actions/exercises'
 import { getServerUser } from '@/lib/supabase/server'
@@ -20,12 +22,16 @@ const EditExerciseEvent = async ({ params }: { params: { id: string } }) => {
   }
 
   return (
-    <div className="p-12">
+    <ExerciseMainContainer>
+      <ExercisePageHeader
+        heading="Record Exercise Session"
+        backUrl="/exercise-sessions"
+      />
       <ExerciseSessionForm
         exerciseEvent={exerciseEvent}
         exercises={exercises}
       />
-    </div>
+    </ExerciseMainContainer>
   )
 }
 
