@@ -1,26 +1,35 @@
 'use client'
 
-import { useFormState, useFormStatus } from 'react-dom'
+import { useFormState } from 'react-dom'
 
 import Link from 'next/link'
-import { IconSpinner } from './ui/icons'
-import { useRouter } from 'next/navigation'
 
 import { login } from '@/app/(server)/auth'
+import { PendingButton } from '@/components/pending-button'
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle
+} from '@/components/ui/card'
 
 export default function LoginForm() {
-  const router = useRouter()
   // @ts-expect-error (will sort later)
-  const [result, dispatch] = useFormState(login, undefined)
+  const [, dispatch] = useFormState(login, undefined)
 
   return (
     <form
       action={dispatch}
       className="flex flex-col items-center gap-4 space-y-3"
     >
-      <div className="w-full flex-1 rounded-lg border bg-white px-6 pb-4 pt-8 shadow-md  md:w-96 dark:bg-zinc-950">
-        <h1 className="mb-3 text-2xl font-bold">Please log in to continue.</h1>
-        <div className="w-full">
+      <Card className="sm:min-w-96">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold">
+            Please log in to continue.
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
           <div>
             <label
               className="mb-3 mt-5 block text-xs font-medium text-zinc-400"
@@ -58,9 +67,13 @@ export default function LoginForm() {
               />
             </div>
           </div>
-        </div>
-        <LoginButton />
-      </div>
+        </CardContent>
+        <CardFooter>
+          <PendingButton size="lg" className="w-full">
+            Log In
+          </PendingButton>
+        </CardFooter>
+      </Card>
 
       <Link
         href="/signup"
@@ -69,18 +82,5 @@ export default function LoginForm() {
         No account yet? <div className="font-semibold underline">Sign up</div>
       </Link>
     </form>
-  )
-}
-
-function LoginButton() {
-  const { pending } = useFormStatus()
-
-  return (
-    <button
-      className="my-4 flex h-10 w-full flex-row items-center justify-center rounded-md bg-zinc-900 p-2 text-sm font-semibold text-zinc-100 hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
-      aria-disabled={pending}
-    >
-      {pending ? <IconSpinner /> : 'Log in'}
-    </button>
   )
 }
