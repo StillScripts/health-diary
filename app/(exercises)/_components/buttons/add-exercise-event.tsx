@@ -1,7 +1,6 @@
 'use client'
 
 import { createExerciseEvent } from '@/app/(server)/actions/exercise-sessions'
-import { createExercise } from '@/app/(server)/actions/exercises'
 import { PendingButton } from '@/components/pending-button'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
