@@ -1,31 +1,21 @@
 import Link from 'next/link'
 import {
+  Dumbbell,
+  FileClock,
   Home,
-  LineChart,
-  Package,
   Package2,
   PanelLeft,
-  Search,
-  ShoppingCart,
-  User2Icon,
-  Users2
+  Search
 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { ExerciseBreadcrumbs } from './exercise-breadcrumbs'
 import { getServerUser } from '@/lib/supabase/server'
 import { UserMenu } from '@/components/user-menu'
 import { Suspense } from 'react'
+import { cn } from '@/lib/utils'
 
 async function UserOrLogin() {
   const serverUser = await getServerUser()
@@ -61,39 +51,31 @@ export const ExerciseHeader = () => {
               <span className="sr-only">Acme Inc</span>
             </Link>
             <Link
-              href="#"
-              className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+              href="/"
+              className={cn(
+                'flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground'
+              )}
             >
               <Home className="size-5" />
-              Dashboard
+              Home
             </Link>
             <Link
-              href="#"
-              className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+              href="/exercises"
+              className={cn(
+                'flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground'
+              )}
             >
-              <ShoppingCart className="size-5" />
-              Orders
+              <Dumbbell className="size-5" />
+              Exercises
             </Link>
             <Link
-              href="#"
-              className="flex items-center gap-4 px-2.5 text-foreground"
+              href="/exercise-sessions"
+              className={cn(
+                'flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground'
+              )}
             >
-              <Package className="size-5" />
-              Products
-            </Link>
-            <Link
-              href="#"
-              className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-            >
-              <Users2 className="size-5" />
-              Customers
-            </Link>
-            <Link
-              href="#"
-              className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-            >
-              <LineChart className="size-5" />
-              Settings
+              <FileClock className="size-5" />
+              Exercise Sessions
             </Link>
           </nav>
         </SheetContent>
