@@ -1,5 +1,4 @@
 'use client'
-import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -34,6 +33,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
+import { SubmittingButton } from '@/components/pending-button'
 
 export function ExerciseForm({
   exercise
@@ -123,7 +123,7 @@ export function ExerciseForm({
             />
           </CardContent>
           <CardFooter className="flex justify-end">
-            <Button>Save</Button>
+            <SubmittingButton>Save</SubmittingButton>
           </CardFooter>
         </Card>
       </form>
