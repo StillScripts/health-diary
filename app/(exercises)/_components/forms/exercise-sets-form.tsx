@@ -36,6 +36,7 @@ import { nanoid } from '@/lib/utils'
 import { Separator } from '@/components/ui/separator'
 import { upsertExerciseSets } from '@/app/(server)/actions/exercise-sets'
 import type { ExerciseEvent } from '@/app/(server)/actions/exercise-events'
+import { SubmittingButton } from '@/components/pending-button'
 
 export function ExerciseSetsForm({
   exercises,
@@ -221,7 +222,7 @@ export function ExerciseSetsForm({
             </Button>
           </CardContent>
           <CardFooter className="flex justify-end">
-            <Button>Save</Button>
+            <SubmittingButton>Save</SubmittingButton>
           </CardFooter>
         </Card>
       </form>

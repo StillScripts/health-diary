@@ -38,6 +38,7 @@ import {
   type ExerciseEventSchema,
   exerciseEventSchema
 } from '@/lib/validators/exercise-event-validator'
+import { SubmittingButton } from '@/components/pending-button'
 
 const getHoursAndMinutes = (date?: Date | null) => {
   if (!date) {
@@ -174,7 +175,7 @@ export function ExerciseEventForm({
             />
           </CardContent>
           <CardFooter className="flex justify-end">
-            <Button>Save</Button>
+            <SubmittingButton>Save</SubmittingButton>
           </CardFooter>
         </Card>
       </form>
