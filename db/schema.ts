@@ -1,13 +1,14 @@
+import { nanoid } from '@/lib/utils'
 import { relations, sql } from 'drizzle-orm'
 import {
   integer,
+  pgEnum,
   pgTable,
   text,
   timestamp,
   uuid,
   varchar
 } from 'drizzle-orm/pg-core'
-import { v4 as uuidv4 } from 'uuid'
 
 const createdAndUpdated = {
   createdAt: timestamp('created_at')
@@ -31,10 +32,10 @@ export const users = pgTable('users', {
 
 /** Table for storing a single exercise event, like swimming 50 laps of 25m pool  */
 export const exerciseEvents = pgTable('exercise_events', {
-  id: uuid('id')
+  id: varchar('id', { length: 13 }) // ee_1234567899
     .notNull()
     .primaryKey()
-    .$defaultFn(() => uuidv4()),
+    .$defaultFn(() => `ee_${nanoid(10)}`),
   startTime: timestamp('start_time')
     .default(sql`now()`)
     .notNull(),
@@ -45,28 +46,40 @@ export const exerciseEvents = pgTable('exercise_events', {
     .references(() => users.id)
 })
 
+export const activityTypeEnum = pgEnum('activity_type', [
+  'Body Weight',
+  'Weights',
+  'Distance',
+  'Sport'
+])
+
 /** Table for storing a single exercise type, like swimming */
 export const exercises = pgTable('exercises', {
-  id: uuid('id')
+  id: varchar('id', { length: 13 }) // ex_1234567899
     .notNull()
     .primaryKey()
-    .$defaultFn(() => uuidv4()),
+    .$defaultFn(() => `ex_${nanoid(10)}`),
   title: varchar('title'),
-  description: text('description')
+  description: text('description'),
+  activityType: activityTypeEnum('activity_type')
 })
 
 /** Table for storing each set in an exercise session */
 export const exerciseSets = pgTable('exercise_sets', {
-  id: uuid('id')
+  id: varchar('id', { length: 13 }) // es_1234567899
     .notNull()
     .primaryKey()
-    .$defaultFn(() => uuidv4()),
+    .$defaultFn(() => `es_${nanoid(10)}`),
   reps: integer('reps'),
+  weight: varchar('weight'),
+  distance: varchar('distance'),
   // By default it will be an event unless an exercise session is created
-  exerciseEventId: uuid('exercise_event_id').references(
+  exerciseEventId: varchar('exercise_event_id', { length: 13 }).references(
     () => exerciseEvents.id
   ),
-  exerciseId: uuid('exercise_id').references(() => exercises.id),
+  exerciseId: varchar('exercise_id', { length: 13 }).references(
+    () => exercises.id
+  ),
   ...createdAndUpdated
 })
 
