@@ -23,7 +23,14 @@ export const getExerciseEvent = async ({ id }: { id: string }) => {
 export type ExerciseEvent = Awaited<ReturnType<typeof getExerciseEvent>>
 
 export const getExerciseEvents = async () => {
-  return await db.query.exerciseEvents.findMany()
+  const session = await getServerUser()
+  const userId = session?.data?.user?.id
+  if (!userId) {
+    return [] //throw new Error('Unauthorised')
+  }
+  return await db.query.exerciseEvents.findMany({
+    where: eq(exerciseEvents.userId, userId)
+  })
 }
 
 export const updateExerciseEvent = async (
