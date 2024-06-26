@@ -17,7 +17,14 @@ export const getExercise = async ({ id }: { id: string }) => {
 export type Exercise = Awaited<ReturnType<typeof getExercise>>
 
 export const getExercises = async () => {
-  return await db.query.exercises.findMany()
+  const session = await getServerUser()
+  const userId = session?.data?.user?.id
+  if (!userId) {
+    return []
+  }
+  return await db.query.exercises.findMany({
+    where: eq(exercises.userId, userId)
+  })
 }
 
 export const createExercise = async (
