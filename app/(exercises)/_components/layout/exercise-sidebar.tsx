@@ -81,7 +81,7 @@ export const ExerciseSidebar = () => {
         <Tooltip>
           <TooltipTrigger asChild>
             <Link
-              href="#"
+              href="/settings"
               className="flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:size-8"
             >
               <Settings className="size-5" />

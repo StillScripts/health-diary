@@ -24,8 +24,8 @@ export const UserSettingsForm = () => {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-4">
-            <Input placeholder="First Name" />
-            <Input placeholder="Last Name" />
+            <Input placeholder="First Name" name="firstName" required />
+            <Input placeholder="Last Name" name="lastName" required />
           </div>
         </CardContent>
         <CardFooter className="border-t px-6 py-4">
