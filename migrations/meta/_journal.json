@@ -43,6 +43,13 @@
       "when": 1719396482689,
       "tag": "0005_brave_toad",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1719404927252,
+      "tag": "0006_even_boomerang",
+      "breakpoints": true
     }
   ]
 }

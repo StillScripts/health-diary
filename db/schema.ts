@@ -90,7 +90,10 @@ export const exercises = pgTable('exercises', {
     .$defaultFn(() => `ex_${nanoid(10)}`),
   title: varchar('title'),
   description: text('description'),
-  activityType: activityTypeEnum('activity_type')
+  activityType: activityTypeEnum('activity_type'),
+  userId: uuid('userId')
+    .notNull()
+    .references(() => users.id)
 })
 
 /** Table for storing each set in an exercise session */
@@ -146,5 +149,24 @@ export const exerciseSetsRelations = relations(exerciseSets, ({ one }) => ({
 
 /** User can have many exercise events */
 export const usersRelations = relations(users, ({ many }) => ({
-  exerciseEvents: many(exerciseEvents)
+  exerciseEvents: many(exerciseEvents),
+  exercises: many(exercises),
+  memberships: many(memberships)
+}))
+
+/** Organisations can have many memberships */
+export const organisationsRelations = relations(organisations, ({ many }) => ({
+  memberships: many(memberships)
+}))
+
+/** An memberships link users with organisations */
+export const membershipsRelations = relations(memberships, ({ one }) => ({
+  users: one(users, {
+    fields: [memberships.userId],
+    references: [users.id]
+  }),
+  organisations: one(organisations, {
+    fields: [memberships.organisationId],
+    references: [organisations.id]
+  })
 }))
