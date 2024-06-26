@@ -1,5 +1,6 @@
 'use client'
-import { Button } from '@/components/ui/button'
+import { updateUser } from '@/app/(server)/actions/user-settings'
+import { PendingButton } from '@/components/pending-button'
 import {
   Card,
   CardContent,
@@ -9,27 +10,28 @@ import {
   CardTitle
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { useFormState } from 'react-dom'
 
 export const UserSettingsForm = () => {
+  const [, dispatch] = useFormState(updateUser, { error: false })
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Your Details</CardTitle>
-        <CardDescription>
-          Used to identify your store in the marketplace.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form>
+    <form action={dispatch}>
+      <Card>
+        <CardHeader>
+          <CardTitle>Your Details</CardTitle>
+          <CardDescription>Update your first and last name</CardDescription>
+        </CardHeader>
+        <CardContent>
           <div className="grid grid-cols-2 gap-4">
             <Input placeholder="First Name" />
             <Input placeholder="Last Name" />
           </div>
-        </form>
-      </CardContent>
-      <CardFooter className="border-t px-6 py-4">
-        <Button>Save</Button>
-      </CardFooter>
-    </Card>
+        </CardContent>
+        <CardFooter className="border-t px-6 py-4">
+          <PendingButton>Save</PendingButton>
+        </CardFooter>
+      </Card>
+    </form>
   )
 }
