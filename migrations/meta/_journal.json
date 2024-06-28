@@ -36,6 +36,20 @@
       "when": 1719119252677,
       "tag": "0004_panoramic_norman_osborn",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1719396482689,
+      "tag": "0005_brave_toad",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1719404927252,
+      "tag": "0006_even_boomerang",
+      "breakpoints": true
     }
   ]
 }

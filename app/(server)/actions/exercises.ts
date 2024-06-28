@@ -17,7 +17,14 @@ export const getExercise = async ({ id }: { id: string }) => {
 export type Exercise = Awaited<ReturnType<typeof getExercise>>
 
 export const getExercises = async () => {
-  return await db.query.exercises.findMany()
+  const session = await getServerUser()
+  const userId = session?.data?.user?.id
+  if (!userId) {
+    return []
+  }
+  return await db.query.exercises.findMany({
+    where: eq(exercises.userId, userId)
+  })
 }
 
 export const createExercise = async (
@@ -28,14 +35,16 @@ export const createExercise = async (
     const id = `ex_${nanoid(10)}`
 
     const session = await getServerUser()
-    if (!session?.data?.user?.id) {
+    const userId = session?.data?.user?.id
+    if (!userId) {
       throw new Error('Unauthorised')
     }
 
     const newEvent = await db
       .insert(exercises)
       .values({
-        id
+        id,
+        userId
       })
       .returning()
     if (!newEvent[0]?.id) {

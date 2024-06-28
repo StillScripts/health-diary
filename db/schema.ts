@@ -30,6 +30,35 @@ export const users = pgTable('users', {
   lastName: varchar('last_name')
 })
 
+export const membershipRoleEnum = pgEnum('role', [
+  'Manager',
+  'Staff',
+  'Customer'
+])
+
+/** Table for storing a membership a user has in a specific org */
+export const memberships = pgTable('memberships', {
+  id: varchar('id', { length: 13 }) // me_1234567899
+    .notNull()
+    .primaryKey()
+    .$defaultFn(() => `me_${nanoid(10)}`),
+  role: membershipRoleEnum('role'),
+  userId: uuid('user_id').references(() => users.id),
+  organisationId: varchar('organisation_id', { length: 14 }).references(
+    () => organisations.id
+  )
+})
+
+/** Table for storing a specific organisation */
+export const organisations = pgTable('organisations', {
+  id: varchar('id', { length: 14 }) // org_1234567899
+    .notNull()
+    .primaryKey()
+    .$defaultFn(() => `org_${nanoid(10)}`),
+  name: varchar('name'),
+  ...createdAndUpdated
+})
+
 /** Table for storing a single exercise event, like swimming 50 laps of 25m pool  */
 export const exerciseEvents = pgTable('exercise_events', {
   id: varchar('id', { length: 13 }) // ee_1234567899
@@ -61,7 +90,10 @@ export const exercises = pgTable('exercises', {
     .$defaultFn(() => `ex_${nanoid(10)}`),
   title: varchar('title'),
   description: text('description'),
-  activityType: activityTypeEnum('activity_type')
+  activityType: activityTypeEnum('activity_type'),
+  userId: uuid('userId')
+    .notNull()
+    .references(() => users.id)
 })
 
 /** Table for storing each set in an exercise session */
@@ -73,7 +105,6 @@ export const exerciseSets = pgTable('exercise_sets', {
   reps: integer('reps'),
   weight: varchar('weight'),
   distance: varchar('distance'),
-  // By default it will be an event unless an exercise session is created
   exerciseEventId: varchar('exercise_event_id', { length: 13 }).references(
     () => exerciseEvents.id
   ),
@@ -118,5 +149,24 @@ export const exerciseSetsRelations = relations(exerciseSets, ({ one }) => ({
 
 /** User can have many exercise events */
 export const usersRelations = relations(users, ({ many }) => ({
-  exerciseEvents: many(exerciseEvents)
+  exerciseEvents: many(exerciseEvents),
+  exercises: many(exercises),
+  memberships: many(memberships)
+}))
+
+/** Organisations can have many memberships */
+export const organisationsRelations = relations(organisations, ({ many }) => ({
+  memberships: many(memberships)
+}))
+
+/** An memberships link users with organisations */
+export const membershipsRelations = relations(memberships, ({ one }) => ({
+  users: one(users, {
+    fields: [memberships.userId],
+    references: [users.id]
+  }),
+  organisations: one(organisations, {
+    fields: [memberships.organisationId],
+    references: [organisations.id]
+  })
 }))
