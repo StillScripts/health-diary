@@ -11,17 +11,18 @@ import { Toaster } from '@/components/ui/sonner'
 export const metadata = {
   metadataBase: process.env.VERCEL_URL
     ? new URL(`https://${process.env.VERCEL_URL}`)
-    : new URL('https://acme.com'),
+    : new URL('https://health-diary-theta.vercel.app'),
   title: {
-    default: 'Next.js AI Chatbot',
-    template: `%s - Next.js AI Chatbot`
+    default: 'Health Diary',
+    template: `%s - Health Diary`
   },
-  description: 'An AI-powered chatbot template built with Next.js and Vercel.',
+  description: 'Track your workouts, activities and diet.',
   icons: {
     icon: '/favicon.ico',
     shortcut: '/favicon-16x16.png',
     apple: '/apple-touch-icon.png'
-  }
+  },
+  manifest: '/manifest.json'
 }
 
 export const viewport = {
