@@ -30,7 +30,7 @@ export async function login(
   }
 
   revalidatePath('/', 'layout')
-  redirect('/chat')
+  redirect('/')
 }
 
 export async function signup(
@@ -55,12 +55,12 @@ export async function signup(
   }
 
   revalidatePath('/', 'layout')
-  redirect('/chat')
+  redirect('/')
 }
 
 export async function signOut() {
   const supabase = createClient()
   supabase.auth.signOut()
   revalidatePath('/', 'layout')
-  redirect('/chat')
+  redirect('/')
 }
