@@ -22,16 +22,7 @@ const EditExerciseEvent = async ({ params }: { params: { id: string } }) => {
   }
 
   return (
-    <ExerciseMainContainer>
-      <ExercisePageHeader
-        heading="Record Exercise Session"
-        backUrl="/exercise-sessions"
-      />
-      <ExerciseSessionForm
-        exerciseEvent={exerciseEvent}
-        exercises={exercises}
-      />
-    </ExerciseMainContainer>
+    <ExerciseSessionForm exerciseEvent={exerciseEvent} exercises={exercises} />
   )
 }
 
