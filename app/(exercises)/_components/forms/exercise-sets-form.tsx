@@ -96,7 +96,7 @@ export function ExerciseSetsForm({
   async function onSubmit(data: ExerciseSetSchema) {
     await upsertExerciseSets({ ...data, exerciseEventId })
       .then(d => {
-        alert(JSON.stringify(d))
+        console.log(JSON.stringify(d))
       })
       .catch(() => {
         alert('An error occurred')
