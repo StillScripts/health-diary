@@ -1,5 +1,5 @@
 import { getExerciseEvents } from '@/app/(server)/actions/exercise-events'
-import { AddExerciseEventButton } from '../_components/buttons/add-exercise-event'
+import { AddExerciseEventButton } from '@/app/(exercises)/_components/buttons/add-exercise-event'
 import {
   Table,
   TableBody,
@@ -9,17 +9,17 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table'
-import { ExerciseMainContainer } from '../_components/layout/exercise-main-container'
-import { ExercisePageHeader } from '../_components/layout/exercise-page-header'
+import { ExercisePageHeader } from '@/app/(exercises)/_components/layout/exercise-page-header'
 import { format } from 'date-fns'
 import { formatDate } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { DeleteExerciseEventButton } from '@/app/(exercises)/_components/buttons/delete-exercise-event'
 
 export default async function ExercissionSessions() {
   const events = await getExerciseEvents()
   return (
-    <ExerciseMainContainer>
+    <>
       <ExercisePageHeader heading="Exercise Sessions">
         <AddExerciseEventButton />
       </ExercisePageHeader>
@@ -33,6 +33,7 @@ export default async function ExercissionSessions() {
               <TableHead>Start Time</TableHead>
               <TableHead>End Time</TableHead>
               <TableHead>Notes</TableHead>
+              <TableHead></TableHead>
               <TableHead></TableHead>
             </TableRow>
           </TableHeader>
@@ -57,11 +58,14 @@ export default async function ExercissionSessions() {
                     </Link>
                   </Button>
                 </TableCell>
+                <TableCell>
+                  <DeleteExerciseEventButton exerciseEvent={event} />
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </div>
-    </ExerciseMainContainer>
+    </>
   )
 }

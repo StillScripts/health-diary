@@ -1,19 +1,35 @@
+'use client'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ExerciseEventForm } from './forms/exercise-event-form'
 import type { ExerciseEvent } from '@/app/(server)/actions/exercise-events'
 import type { Exercise } from '@/app/(server)/actions/exercises'
 import { ExerciseSetsForm } from './forms/exercise-sets-form'
+import { usePathname, useRouter } from 'next/navigation'
+
+const TABS = ['Summary', 'Activities'] as const
+export type ExerciseSessionFormTab = (typeof TABS)[number]
 
 export default function ExerciseSessionForm({
   exerciseEvent,
-  exercises
+  exercises,
+  tab
 }: {
   exerciseEvent: NonNullable<ExerciseEvent>
   exercises: Array<NonNullable<Exercise>>
+  tab?: string
 }) {
-  const TABS = ['Summary', 'Acivities']
+  const router = useRouter()
+  const pathname = usePathname()
+  const index = TABS.findIndex(t => t.toLowerCase() === tab)
+  console.log(index)
   return (
-    <Tabs defaultValue={TABS[0]} className="w-[400px]">
+    <Tabs
+      value={TABS[index >= 0 ? index : 0]}
+      onValueChange={value =>
+        router.replace(pathname + `?tab=${value.toLowerCase()}`)
+      }
+      className="w-[400px]"
+    >
       <TabsList className="grid w-full grid-cols-2">
         {TABS.map(tab => (
           <TabsTrigger key={tab} value={tab}>

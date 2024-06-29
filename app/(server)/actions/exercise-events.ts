@@ -1,11 +1,13 @@
 'use server'
 
 import { db } from '@/db/connection'
-import { exerciseEvents } from '@/db/schema'
+import { exerciseEvents, exerciseSets } from '@/db/schema'
 import { getServerUser } from '@/lib/supabase/server'
+import { ActionStatus } from '@/lib/utils'
 import type { ExerciseEventSchema } from '@/lib/validators/exercise-event-validator'
 import { eq } from 'drizzle-orm'
 import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 
 const setTimeOnDate = (date: Date, time: string) => {
   const [hours, minutes] = time.split(':').map(Number)
@@ -51,7 +53,45 @@ export const updateExerciseEvent = async (
     .where(eq(exerciseEvents.id, data.id))
     .returning({ updatedId: exerciseEvents.id })
 
-  if (response[0].updatedId) {
-    revalidatePath(`/exercise-sessions/${response}/edit`, 'page')
+  const pathId = response[0]?.updatedId
+  if (pathId) {
+    revalidatePath(`/exercise-sessions/${pathId}/edit`, 'page')
+    redirect(`/exercise-sessions/${pathId}/edit?tab=activities`)
+  }
+}
+
+export const deleteExerciseEvent = async (
+  state: ActionStatus,
+  formData: FormData
+) => {
+  try {
+    const session = await getServerUser()
+    const userId = session?.data?.user?.id
+    if (!userId) {
+      throw new Error('Unauthorised')
+    }
+
+    const exerciseEventId = formData.get('id') as string
+
+    if (!exerciseEventId) {
+      throw new Error('Missing exercise id')
+    }
+
+    await db
+      .delete(exerciseSets)
+      .where(eq(exerciseSets.exerciseEventId, exerciseEventId))
+    await db
+      .delete(exerciseEvents)
+      .where(eq(exerciseEvents.id, exerciseEventId))
+    revalidatePath('/exercise-sessions', 'page')
+
+    return {
+      success: true
+    }
+  } catch (error) {
+    return {
+      // @ts-expect-error
+      error: error.message
+    }
   }
 }

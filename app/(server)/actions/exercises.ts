@@ -85,3 +85,34 @@ export const updateExercise = async ({
     throw new Error('An error occurred')
   }
 }
+
+export const deleteExercise = async (
+  state: ActionStatus,
+  formData: FormData
+) => {
+  try {
+    const session = await getServerUser()
+    const userId = session?.data?.user?.id
+    if (!userId) {
+      throw new Error('Unauthorised')
+    }
+
+    const exerciseId = formData.get('id') as string
+
+    if (!exerciseId) {
+      throw new Error('Missing exercise id')
+    }
+
+    await db.delete(exercises).where(eq(exercises.id, exerciseId))
+    revalidatePath('/exercises', 'page')
+
+    return {
+      success: true
+    }
+  } catch (error) {
+    return {
+      // @ts-expect-error
+      error: error.message
+    }
+  }
+}

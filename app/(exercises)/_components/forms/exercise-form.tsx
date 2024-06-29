@@ -34,6 +34,7 @@ import {
   SelectValue
 } from '@/components/ui/select'
 import { SubmittingButton } from '@/components/pending-button'
+import { FormToast } from '@/components/form-toast'
 
 export function ExerciseForm({
   exercise
@@ -45,7 +46,8 @@ export function ExerciseForm({
     defaultValues: {
       id: exercise.id,
       title: exercise?.title ?? '',
-      description: exercise?.description ?? ''
+      description: exercise?.description ?? '',
+      activityType: exercise?.activityType ?? 'Body Weight'
     }
   })
 
@@ -126,6 +128,7 @@ export function ExerciseForm({
             <SubmittingButton>Save</SubmittingButton>
           </CardFooter>
         </Card>
+        <FormToast title="Success" description="Exercise successfuly updated" />
       </form>
     </Form>
   )
