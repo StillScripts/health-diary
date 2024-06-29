@@ -15,6 +15,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { useEffect } from 'react'
 import { useFormState } from 'react-dom'
+import { toast } from 'sonner'
 
 export const DeleteExerciseButton = ({
   exercise
@@ -24,9 +25,13 @@ export const DeleteExerciseButton = ({
   const [result, dispatch] = useFormState(deleteExercise, { error: false })
   useEffect(() => {
     if (result.success) {
-      alert('success')
+      toast('Success', {
+        description: 'Exercise has been deleted'
+      })
     } else if (result.error) {
-      alert('error')
+      toast('Error', {
+        description: 'Exercise was not able to be deleted'
+      })
     }
   }, [result.error, result.success])
   return (
