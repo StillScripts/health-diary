@@ -7,6 +7,7 @@ import { ActionStatus } from '@/lib/utils'
 import type { ExerciseEventSchema } from '@/lib/validators/exercise-event-validator'
 import { eq } from 'drizzle-orm'
 import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
 
 const setTimeOnDate = (date: Date, time: string) => {
   const [hours, minutes] = time.split(':').map(Number)
@@ -52,8 +53,10 @@ export const updateExerciseEvent = async (
     .where(eq(exerciseEvents.id, data.id))
     .returning({ updatedId: exerciseEvents.id })
 
-  if (response[0].updatedId) {
-    revalidatePath(`/exercise-sessions/${response}/edit`, 'page')
+  const pathId = response[0]?.updatedId
+  if (pathId) {
+    revalidatePath(`/exercise-sessions/${pathId}/edit`, 'page')
+    redirect(`/exercise-sessions/${pathId}/edit?tab=activities`)
   }
 }
 
