@@ -10,7 +10,7 @@ export default async function SignupPage() {
   const session = await getServerUser()
 
   if (session?.data?.user) {
-    redirect('/chat')
+    redirect('/')
   }
 
   return <SignupForm />
