@@ -11,7 +11,7 @@ export default function ExerciseSessionForm({
   exerciseEvent: NonNullable<ExerciseEvent>
   exercises: Array<NonNullable<Exercise>>
 }) {
-  const TABS = ['Summary', 'Acivities']
+  const TABS = ['Summary', 'Activities']
   return (
     <Tabs defaultValue={TABS[0]} className="w-[400px]">
       <TabsList className="grid w-full grid-cols-2">

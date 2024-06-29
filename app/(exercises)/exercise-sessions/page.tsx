@@ -15,6 +15,7 @@ import { format } from 'date-fns'
 import { formatDate } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { DeleteExerciseEventButton } from '../_components/buttons/delete-exercise-event'
 
 export default async function ExercissionSessions() {
   const events = await getExerciseEvents()
@@ -33,6 +34,7 @@ export default async function ExercissionSessions() {
               <TableHead>Start Time</TableHead>
               <TableHead>End Time</TableHead>
               <TableHead>Notes</TableHead>
+              <TableHead></TableHead>
               <TableHead></TableHead>
             </TableRow>
           </TableHeader>
@@ -56,6 +58,9 @@ export default async function ExercissionSessions() {
                       Edit
                     </Link>
                   </Button>
+                </TableCell>
+                <TableCell>
+                  <DeleteExerciseEventButton exerciseEvent={event} />
                 </TableCell>
               </TableRow>
             ))}
