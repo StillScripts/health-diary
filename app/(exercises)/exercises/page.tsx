@@ -13,6 +13,7 @@ import { ExerciseMainContainer } from '../_components/layout/exercise-main-conta
 import { ExercisePageHeader } from '../_components/layout/exercise-page-header'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { DeleteExerciseButton } from '../_components/buttons/delete-exercise'
 
 export default async function Exercises() {
   const exercises = await getExercises()
@@ -27,8 +28,9 @@ export default async function Exercises() {
           <TableHeader>
             <TableRow>
               <TableHead className="w-[100px]">Title</TableHead>
-              <TableHead>Description</TableHead>
+              <TableHead className="hidden sm:block">Description</TableHead>
               <TableHead>Activity Type</TableHead>
+              <TableHead></TableHead>
               <TableHead></TableHead>
             </TableRow>
           </TableHeader>
@@ -36,12 +38,17 @@ export default async function Exercises() {
             {exercises.map(exercise => (
               <TableRow key={exercise.id}>
                 <TableCell className="font-medium">{exercise.title}</TableCell>
-                <TableCell>{exercise.description}</TableCell>
+                <TableCell className="hidden sm:block">
+                  {exercise.description}
+                </TableCell>
                 <TableCell>{exercise.activityType}</TableCell>
                 <TableCell>
                   <Button size="sm" asChild variant="outline">
                     <Link href={`/exercises/${exercise.id}/edit`}>Edit</Link>
                   </Button>
+                </TableCell>
+                <TableCell>
+                  <DeleteExerciseButton exercise={exercise} />
                 </TableCell>
               </TableRow>
             ))}
