@@ -20,10 +20,11 @@ export default function ExerciseSessionForm({
 }) {
   const router = useRouter()
   const pathname = usePathname()
-  const index = TABS.findIndex(t => t.toLowerCase() === tab) || 0
+  const index = TABS.findIndex(t => t.toLowerCase() === tab)
+  console.log(index)
   return (
     <Tabs
-      value={TABS[index]}
+      value={TABS[index >= 0 ? index : 0]}
       onValueChange={value =>
         router.replace(pathname + `?tab=${value.toLowerCase()}`)
       }
