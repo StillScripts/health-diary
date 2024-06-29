@@ -9,7 +9,6 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table'
-import { ExerciseMainContainer } from '../_components/layout/exercise-main-container'
 import { ExercisePageHeader } from '../_components/layout/exercise-page-header'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
@@ -18,7 +17,7 @@ import { DeleteExerciseButton } from '../_components/buttons/delete-exercise'
 export default async function Exercises() {
   const exercises = await getExercises()
   return (
-    <ExerciseMainContainer>
+    <>
       <ExercisePageHeader heading="Exercises">
         <AddExerciseButton />
       </ExercisePageHeader>
@@ -55,6 +54,6 @@ export default async function Exercises() {
           </TableBody>
         </Table>
       </div>
-    </ExerciseMainContainer>
+    </>
   )
 }
