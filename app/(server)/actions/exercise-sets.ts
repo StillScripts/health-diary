@@ -29,13 +29,13 @@ export const upsertExerciseSets = async (
     for (const set of sets) {
       const result = await trx
         .insert(exerciseSets)
-        .values(set)
+        .values({ ...set, reps: set?.reps ?? 0 })
         .onConflictDoUpdate({
           target: exerciseSets.id,
           targetWhere: sql`
             exercise_event_id <> ${set.exerciseEventId} OR 
             exercise_id <> ${set.exerciseId} OR 
-            reps <> ${set.reps} OR 
+            reps <> ${set?.reps ?? 0} OR 
             weight <> ${set.weight} OR 
             distance <> ${set.distance}
           `,

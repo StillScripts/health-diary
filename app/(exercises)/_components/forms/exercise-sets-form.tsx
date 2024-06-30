@@ -98,7 +98,8 @@ export function ExerciseSetsForm({
       .then(d => {
         console.log(JSON.stringify(d))
       })
-      .catch(() => {
+      .catch(error => {
+        console.log(error)
         alert('An error occurred')
       })
   }
