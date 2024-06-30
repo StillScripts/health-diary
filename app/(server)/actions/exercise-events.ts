@@ -1,5 +1,6 @@
 'use server'
 
+import { cache } from 'react'
 import { db } from '@/db/connection'
 import { exerciseEvents, exerciseSets } from '@/db/schema'
 import { getServerUser } from '@/lib/supabase/server'
@@ -15,16 +16,16 @@ const setTimeOnDate = (date: Date, time: string) => {
   return date
 }
 
-export const getExerciseEvent = async ({ id }: { id: string }) => {
+export const getExerciseEvent = cache(async ({ id }: { id: string }) => {
   return await db.query.exerciseEvents.findFirst({
     where: eq(exerciseEvents.id, id),
     with: { exerciseSets: true }
   })
-}
+})
 
 export type ExerciseEvent = Awaited<ReturnType<typeof getExerciseEvent>>
 
-export const getExerciseEvents = async () => {
+export const getExerciseEvents = cache(async () => {
   const session = await getServerUser()
   const userId = session?.data?.user?.id
   if (!userId) {
@@ -33,7 +34,7 @@ export const getExerciseEvents = async () => {
   return await db.query.exerciseEvents.findMany({
     where: eq(exerciseEvents.userId, userId)
   })
-}
+})
 
 export const updateExerciseEvent = async (
   data: ExerciseEventSchema & { id: string }

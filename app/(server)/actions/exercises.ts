@@ -1,5 +1,6 @@
 'use server'
 
+import { cache } from 'react'
 import { db } from '@/db/connection'
 import { exercises } from '@/db/schema'
 import { getServerUser } from '@/lib/supabase/server'
@@ -8,15 +9,15 @@ import { nanoid, type ActionStatus } from '@/lib/utils'
 import { ExerciseSchema } from '@/lib/validators/exercise-validator'
 import { revalidatePath } from 'next/cache'
 
-export const getExercise = async ({ id }: { id: string }) => {
+export const getExercise = cache(async ({ id }: { id: string }) => {
   return await db.query.exercises.findFirst({
     where: eq(exercises.id, id)
   })
-}
+})
 
 export type Exercise = Awaited<ReturnType<typeof getExercise>>
 
-export const getExercises = async () => {
+export const getExercises = cache(async () => {
   const session = await getServerUser()
   const userId = session?.data?.user?.id
   if (!userId) {
@@ -25,7 +26,7 @@ export const getExercises = async () => {
   return await db.query.exercises.findMany({
     where: eq(exercises.userId, userId)
   })
-}
+})
 
 export const createExercise = async (
   state: ActionStatus,
