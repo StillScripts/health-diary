@@ -6,6 +6,7 @@ import {
   pgTable,
   text,
   timestamp,
+  date,
   uuid,
   varchar
 } from 'drizzle-orm/pg-core'
@@ -65,10 +66,11 @@ export const exerciseEvents = pgTable('exercise_events', {
     .notNull()
     .primaryKey()
     .$defaultFn(() => `ee_${nanoid(10)}`),
-  startTime: timestamp('start_time')
-    .default(sql`now()`)
-    .notNull(),
-  endTime: timestamp('end_time'),
+  date: date('date')
+    .notNull()
+    .default(sql`now()`),
+  startTime: varchar('start_time', { length: 5 }), // 09:30 -> 9:30 AM
+  endTime: varchar('end_time', { length: 5 }),
   notes: text('notes'),
   userId: uuid('userId')
     .notNull()

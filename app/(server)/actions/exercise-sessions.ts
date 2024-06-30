@@ -4,6 +4,7 @@ import { db } from '@/db/connection'
 import { exerciseEvents } from '@/db/schema'
 import { getServerUser } from '@/lib/supabase/server'
 import { nanoid, type ActionStatus } from '@/lib/utils'
+import { format } from 'date-fns'
 
 export const createExerciseEvent = async (
   state: ActionStatus,
@@ -22,7 +23,8 @@ export const createExerciseEvent = async (
       .values({
         id,
         userId: session.data.user.id,
-        startTime: new Date()
+        date: format(new Date(), 'yyyy-MM-dd'),
+        startTime: '00:00'
       })
       .returning()
     return {
@@ -30,6 +32,7 @@ export const createExerciseEvent = async (
       success: true
     }
   } catch (error) {
+    console.log(error)
     return {
       error: true
     }

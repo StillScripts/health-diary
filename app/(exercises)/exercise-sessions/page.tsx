@@ -10,13 +10,24 @@ import {
   TableRow
 } from '@/components/ui/table'
 import { ExercisePageHeader } from '@/app/(exercises)/_components/layout/exercise-page-header'
-import { format } from 'date-fns'
+import { format, parse } from 'date-fns'
 import { formatDate } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { DeleteExerciseEventButton } from '@/app/(exercises)/_components/buttons/delete-exercise-event'
 
-export default async function ExercissionSessions() {
+const formatTimeString = (timeString: string | null) => {
+  if (!timeString) {
+    return null
+  }
+  // Parse the time string into a Date object (assuming today's date)
+  const date = parse(timeString, 'HH:mm', new Date())
+
+  // Format the Date object as "4:00 pm"
+  return format(date, 'h:mm a')
+}
+
+export default async function ExerciseSessions() {
   const events = await getExerciseEvents()
   return (
     <>
@@ -41,15 +52,12 @@ export default async function ExercissionSessions() {
             {events.map(event => (
               <TableRow key={event.id}>
                 <TableCell className="font-medium">
-                  {event.startTime && formatDate(new Date(event.startTime))}
+                  {event.date && formatDate(new Date(event.date))}
                 </TableCell>
                 <TableCell className="font-medium">
-                  {event.startTime &&
-                    format(new Date(event.startTime), 'h:mma')}
+                  {formatTimeString(event?.startTime)}
                 </TableCell>
-                <TableCell>
-                  {event.endTime && format(new Date(event.endTime), 'h:mma')}
-                </TableCell>
+                <TableCell>{formatTimeString(event?.endTime)}</TableCell>
                 <TableCell>{event.notes}</TableCell>
                 <TableCell>
                   <Button size="sm" asChild variant="outline">

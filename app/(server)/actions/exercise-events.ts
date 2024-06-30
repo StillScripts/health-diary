@@ -5,15 +5,10 @@ import { exerciseEvents, exerciseSets } from '@/db/schema'
 import { getServerUser } from '@/lib/supabase/server'
 import { ActionStatus } from '@/lib/utils'
 import type { ExerciseEventSchema } from '@/lib/validators/exercise-event-validator'
+import { format } from 'date-fns'
 import { eq } from 'drizzle-orm'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-
-const setTimeOnDate = (date: Date, time: string) => {
-  const [hours, minutes] = time.split(':').map(Number)
-  date.setHours(hours, minutes, 0, 0)
-  return date
-}
 
 export const getExerciseEvent = async ({ id }: { id: string }) => {
   return await db.query.exerciseEvents.findFirst({
@@ -38,8 +33,10 @@ export const getExerciseEvents = async () => {
 export const updateExerciseEvent = async (
   data: ExerciseEventSchema & { id: string }
 ) => {
-  const startTime = setTimeOnDate(data.date, data.startTime)
-  const endTime = data.endTime ? setTimeOnDate(data.date, data.endTime) : null
+  const dateObject = new Date(data.date)
+  const date = format(dateObject, 'yyyy-MM-dd')
+  const startTime = data?.startTime ?? null
+  const endTime = data?.endTime ?? null
   const notes = data.notes || null
 
   const session = await getServerUser()
@@ -49,7 +46,7 @@ export const updateExerciseEvent = async (
 
   const response = await db
     .update(exerciseEvents)
-    .set({ startTime, endTime, notes })
+    .set({ date, startTime, endTime, notes })
     .where(eq(exerciseEvents.id, data.id))
     .returning({ updatedId: exerciseEvents.id })
 

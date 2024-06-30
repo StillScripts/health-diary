@@ -1,0 +1,1 @@
+ALTER TABLE "exercise_events" ADD COLUMN "date" date DEFAULT now() NOT NULL;
