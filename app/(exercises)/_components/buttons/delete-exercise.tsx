@@ -58,8 +58,8 @@ export const DeleteExerciseButton = ({
               className="hidden"
               hidden
             ></input>
-            <AlertDialogAction asChild>
-              <PendingButton type="submit">Confirm</PendingButton>
+            <AlertDialogAction type="submit" className="w-full sm:w-auto">
+              Confirm
             </AlertDialogAction>
           </form>
         </AlertDialogFooter>
