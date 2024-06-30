@@ -54,16 +54,15 @@ export function ExerciseEventForm({
 }: {
   exerciseEvent: NonNullable<ExerciseEvent>
 }) {
-  const start = exerciseEvent?.startTime
-  const date = start ? new Date(start) : new Date()
+  const date = exerciseEvent?.date ? new Date(exerciseEvent.date) : new Date()
 
   const form = useForm<ExerciseEventSchema>({
     resolver: zodResolver(exerciseEventSchema),
     defaultValues: {
       id: exerciseEvent.id,
       date,
-      startTime: getHoursAndMinutes(date),
-      endTime: getHoursAndMinutes(exerciseEvent?.endTime),
+      startTime: exerciseEvent?.startTime ?? getHoursAndMinutes(date), // default to current moment
+      endTime: exerciseEvent?.endTime ?? undefined,
       notes: exerciseEvent?.notes ?? undefined
     }
   })
