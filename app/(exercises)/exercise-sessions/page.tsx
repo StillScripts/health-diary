@@ -1,4 +1,3 @@
-import { getExerciseEvents } from '@/app/(server)/actions/exercise-events'
 import { AddExerciseEventButton } from '@/app/(exercises)/_components/buttons/add-exercise-event'
 import {
   Table,
@@ -15,9 +14,22 @@ import { formatDate } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { DeleteExerciseEventButton } from '@/app/(exercises)/_components/buttons/delete-exercise-event'
+import { redirect } from 'next/navigation'
+import { getServerUser } from '@/lib/supabase/server'
+import { GET } from '@/app/(server)/api/exercise-sessions/[user_id]/route'
+import type { ExerciseEvent } from '@/app/(server)/actions/exercise-events'
 
 export default async function ExercissionSessions() {
-  const events = await getExerciseEvents()
+  const session = await getServerUser()
+
+  if (!session?.data?.user?.id) {
+    redirect('/login')
+  }
+
+  const fetchedEvents = await GET({ params: { user_id: session.data.user.id } })
+  const eventsJson = await fetchedEvents.json()
+  const events = eventsJson.data as NonNullable<ExerciseEvent>[]
+
   return (
     <>
       <ExercisePageHeader heading="Exercise Sessions">
