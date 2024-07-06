@@ -1,27 +1,10 @@
-import Link from 'next/link'
 import { Search } from 'lucide-react'
 
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ExerciseBreadcrumbs } from './exercise-breadcrumbs'
-import { getServerUser } from '@/lib/supabase/server'
-import { UserMenu } from '@/components/user-menu'
 import { Suspense } from 'react'
 import { ExerciseMobileSidebar } from './exercise-mobile-sidebar'
-
-async function UserOrLogin() {
-  const serverUser = await getServerUser()
-  const session = serverUser?.data
-  if (session?.user) {
-    // @ts-expect-error needs a prop change
-    return <UserMenu user={session.user} variant="icon" />
-  }
-  return (
-    <Button variant="link" asChild className="-ml-2">
-      <Link href="/login">Login</Link>
-    </Button>
-  )
-}
+import { UserOrLogin } from '@/components/user-or-login'
 
 export const ExerciseHeader = () => {
   return (
