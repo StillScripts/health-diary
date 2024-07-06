@@ -5,17 +5,17 @@ import { getMissingKeys } from '@/app/actions'
 import { getServerUser } from '@/lib/supabase/server'
 
 export const metadata = {
-  title: 'Health Diary'
+	title: 'Chat'
 }
 
 export default async function IndexPage() {
-  const id = nanoid()
-  const session = await getServerUser()
-  const missingKeys = await getMissingKeys()
+	const id = nanoid()
+	const session = await getServerUser()
+	const missingKeys = await getMissingKeys()
 
-  return (
-    <AI initialAIState={{ chatId: id, messages: [] }}>
-      <Chat id={id} session={session?.data} missingKeys={missingKeys} />
-    </AI>
-  )
+	return (
+		<AI initialAIState={{ chatId: id, messages: [] }}>
+			<Chat id={id} session={session?.data} missingKeys={missingKeys} />
+		</AI>
+	)
 }
