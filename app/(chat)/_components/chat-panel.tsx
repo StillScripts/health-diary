@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import { shareChat } from '@/app/actions'
 import { Button } from '@/components/ui/button'
-import { PromptForm } from '@/components/prompt-form'
+import { PromptForm } from './prompt-form'
 import { ButtonScrollToBottom } from '@/components/button-scroll-to-bottom'
 import { IconShare } from '@/components/ui/icons'
 import { ChatShareDialog } from '@/app/(chat)/_components/chat-share-dialog'
