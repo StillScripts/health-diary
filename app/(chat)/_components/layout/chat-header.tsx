@@ -1,8 +1,8 @@
 import Link from 'next/link'
 
 import { IconNextChat } from '@/components/ui/icons'
-import { SidebarMobile } from '@/components/sidebar-mobile'
-import { SidebarToggle } from '@/components/sidebar-toggle'
+import { SidebarMobile } from '@/app/(chat)/_components/layout/sidebar-mobile'
+import { SidebarToggle } from '@/app/(chat)/_components/layout/sidebar-toggle'
 import { ChatHistory } from '@/components/chat-history'
 import { getServerUser } from '@/lib/supabase/server'
 import { Suspense } from 'react'
