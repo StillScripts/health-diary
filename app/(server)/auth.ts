@@ -4,6 +4,12 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
 import { createClient } from '@/lib/supabase/server'
+import { zfd } from 'zod-form-data'
+
+const authValidator = zfd.formData({
+  email: zfd.text(),
+  password: zfd.text()
+})
 
 interface Result {
   type: string
@@ -15,14 +21,7 @@ export async function login(
   formData: FormData
 ) {
   const supabase = createClient()
-
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
-  const data = {
-    email: formData.get('email') as string,
-    password: formData.get('password') as string
-  }
-
+  const data = authValidator.parse(formData)
   const { error } = await supabase.auth.signInWithPassword(data)
 
   if (error) {
@@ -38,15 +37,7 @@ export async function signup(
   formData: FormData
 ) {
   const supabase = createClient()
-
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
-  const data = {
-    email: formData.get('email') as string,
-    password: formData.get('password') as string
-  }
-  console.log(data)
-
+  const data = authValidator.parse(formData)
   const { error } = await supabase.auth.signUp(data)
 
   if (error) {
