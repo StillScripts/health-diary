@@ -2,7 +2,7 @@ import { type Metadata } from 'next'
 import { notFound, redirect } from 'next/navigation'
 
 import { getChat, getMissingKeys } from '@/app/actions'
-import { Chat } from '@/components/chat'
+import { Chat } from '@/app/(chat)/_components/chat'
 import { AI } from '@/lib/chat/actions'
 import { Session } from '@/lib/types'
 import { getServerUser } from '@/lib/supabase/server'
