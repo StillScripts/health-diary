@@ -1,6 +1,6 @@
 import { clearChats, getChats } from '@/app/actions'
-import { ClearHistory } from '@/components/clear-history'
-import { SidebarItems } from '@/components/sidebar-items'
+import { ClearHistory } from '@/app/(chat)/_components/clear-history'
+import { SidebarItems } from '@/app/(chat)/_components/layout/sidebar-items'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { cache } from 'react'
 

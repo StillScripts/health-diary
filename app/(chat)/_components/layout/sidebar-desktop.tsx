@@ -1,6 +1,6 @@
-import { Sidebar } from '@/components/sidebar'
+import { Sidebar } from '@/app/(chat)/_components/layout/sidebar'
 
-import { ChatHistory } from '@/components/chat-history'
+import { ChatHistory } from '@/app/(chat)/_components/chat-history'
 import { getServerUser } from '@/lib/supabase/server'
 
 export async function SidebarDesktop() {
