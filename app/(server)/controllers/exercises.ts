@@ -1,12 +1,13 @@
 import { Elysia } from 'elysia'
+import { createInsertSchema } from 'drizzle-typebox'
 
 import { exercises } from '@/db/schema'
 import CRUDController from '@/lib/crud-service'
 
-type ThisModel = typeof exercises
+type ExercisesModel = typeof exercises
 
-class ExercisesService extends CRUDController<ThisModel> {
-	constructor(model: ThisModel) {
+class ExercisesService extends CRUDController<ExercisesModel> {
+	constructor(model: ExercisesModel) {
 		super(model)
 	}
 
@@ -14,6 +15,8 @@ class ExercisesService extends CRUDController<ThisModel> {
 		return await this.db.select().from(this.model).limit(3)
 	}
 }
+
+const insertSchema = createInsertSchema(exercises)
 
 export const exercisesController = new Elysia({ prefix: '/exercises' })
 	.decorate({
@@ -30,8 +33,13 @@ export const exercisesController = new Elysia({ prefix: '/exercises' })
 	// create
 	.post(
 		'/',
-		// @ts-expect-error (we will use the schema from Drizzle later)
-		async ({ ExercisesService, body }) => await ExercisesService.create(body)
+		async ({ ExercisesService, body }) => {
+			// @ts-expect-error need to sync
+			await ExercisesService.create(body)
+		},
+		{
+			body: insertSchema
+		}
 	)
 	// update
 	.patch('/:id', async ({ ExercisesService, params: { id }, body }) => {

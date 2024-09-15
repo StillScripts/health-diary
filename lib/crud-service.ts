@@ -1,13 +1,11 @@
 import { db } from '@/db/connection'
 import { SQL, eq } from 'drizzle-orm'
-import { PgTable, PgTableWithColumns } from 'drizzle-orm/pg-core'
+import { PgTable } from 'drizzle-orm/pg-core'
+import { createInsertSchema } from 'drizzle-typebox'
 
 interface TableWithId {
 	id: any
 }
-
-type TableColumns<T extends PgTable> =
-	T extends PgTableWithColumns<any> ? T['_']['columns'] : never
 
 class CRUDController<T extends PgTable & TableWithId> {
 	db: typeof db
@@ -31,18 +29,22 @@ class CRUDController<T extends PgTable & TableWithId> {
 		return result[0]
 	}
 
-	async create(data: Partial<TableColumns<T>>) {
+	async create(data: Partial<ReturnType<typeof createInsertSchema<T>>>) {
 		const [result] = await this.db
 			.insert(this.model)
-			.values(data as any)
+			// @ts-expect-error holy crap this is hard
+			.values(data)
 			.returning()
 		return result
 	}
 
-	async update(id: string | number, data: Partial<TableColumns<T>>) {
+	async update(
+		id: string | number,
+		data: Partial<ReturnType<typeof createInsertSchema<T>>>
+	) {
 		const [result] = await this.db
 			.update(this.model)
-			.set(data as any)
+			.set(data)
 			.where(eq(this.model.id, id))
 			.returning()
 		return result
@@ -58,28 +60,3 @@ class CRUDController<T extends PgTable & TableWithId> {
 }
 
 export default CRUDController
-
-// class DemoController extends CRUDController {
-// 	constructor(db, model) {
-// 		super(db, model)
-// 	}
-
-// 	async duplicate(id) {
-// 		const [original] = await this.show(id)
-// 		if (!original) {
-// 			throw new Error('Record not found')
-// 		}
-
-// 		// Remove the id from the original to create a new record
-// 		const { id: _, ...newData } = original
-// 		return await this.create(newData)
-// 	}
-
-// 	async recentTen() {
-// 		return await this.db
-// 			.select()
-// 			.from(this.model)
-// 			.orderBy(desc(this.model.createdAt))
-// 			.limit(10)
-// 	}
-// }
