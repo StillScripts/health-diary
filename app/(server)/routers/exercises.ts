@@ -1,3 +1,4 @@
+// This can serve as a demo for a full Elysia controller for a Drizzle model
 import { Elysia, t } from 'elysia'
 import { createInsertSchema, createSelectSchema } from 'drizzle-typebox'
 
@@ -16,8 +17,9 @@ class ExercisesController extends CRUDController<typeof exercises> {
 	}
 }
 
-/** Validate inputs for the `exercises` model */
+/** Validate input for the `exercises` model */
 const insertSchema = createInsertSchema(exercises)
+/** Validate output for the `exercises` model */
 const selectSchema = createSelectSchema(exercises)
 
 /** Handle routes for the `exercises` model */

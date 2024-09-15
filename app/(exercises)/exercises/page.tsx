@@ -19,7 +19,6 @@ export default async function Exercises() {
 	if (error) {
 		throw new Error('An error occurred')
 	}
-	const exercises = data
 	return (
 		<>
 			<ExercisePageHeader heading="Exercises">
@@ -38,7 +37,7 @@ export default async function Exercises() {
 						</TableRow>
 					</TableHeader>
 					<TableBody>
-						{exercises.map(exercise => (
+						{data.map(exercise => (
 							<TableRow key={exercise.id}>
 								<TableCell className="font-medium">{exercise.title}</TableCell>
 								<TableCell className="hidden sm:block">

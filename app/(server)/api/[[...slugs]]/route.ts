@@ -1,6 +1,7 @@
 import { Elysia } from 'elysia'
 
 import { exercisesRouter } from '@/app/(server)/routers/exercises'
+import { exerciseEventsRouter } from '@/app/(server)/routers/exercise-events'
 
 export const dynamic = 'force-dynamic'
 
@@ -8,6 +9,7 @@ export const dynamic = 'force-dynamic'
 
 const app = new Elysia({ prefix: '/api' })
 	.use(exercisesRouter)
+	.use(exerciseEventsRouter)
 	.get('/', () => 'hello Next')
 
 export type App = typeof app
