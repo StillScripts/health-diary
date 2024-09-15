@@ -3,14 +3,13 @@ import { Elysia, t } from 'elysia'
 
 import { db } from '@/db/connection'
 import { exerciseEvents, exercises } from '@/db/schema'
-import { getServerUser } from '@/lib/supabase/server'
 import BaseCRUDController from '@/lib/crud-service'
+import { exercisesController } from '../../controllers/exercises'
 
 //https://github.com/itsyoboieltr/dbest-stack/blob/main/src/routes/api/todo/index.ts
 
-const ExercisesService = new BaseCRUDController(exercises)
-
 const app = new Elysia({ prefix: '/api' })
+	.use(exercisesController)
 	.get('/', () => 'hello Next')
 	.post('/', ({ body }) => body, {
 		body: t.Object({
@@ -26,7 +25,6 @@ const app = new Elysia({ prefix: '/api' })
 			}
 		}
 	})
-	.get('/exercises', async () => await ExercisesService.index())
 
 export const GET = app.handle
 export const POST = app.handle

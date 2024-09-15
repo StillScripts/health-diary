@@ -9,7 +9,7 @@ interface TableWithId {
 type TableColumns<T extends PgTable> =
 	T extends PgTableWithColumns<any> ? T['_']['columns'] : never
 
-class BaseCRUDController<T extends PgTable & TableWithId> {
+class CRUDController<T extends PgTable & TableWithId> {
 	db: typeof db
 	model: T
 
@@ -57,9 +57,9 @@ class BaseCRUDController<T extends PgTable & TableWithId> {
 	}
 }
 
-export default BaseCRUDController
+export default CRUDController
 
-// class DemoController extends BaseCRUDController {
+// class DemoController extends CRUDController {
 // 	constructor(db, model) {
 // 		super(db, model)
 // 	}
