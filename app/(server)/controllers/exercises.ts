@@ -34,7 +34,6 @@ export const exercisesController = new Elysia({ prefix: '/exercises' })
 	.post(
 		'/',
 		async ({ ExercisesService, body }) => {
-			// @ts-expect-error need to sync
 			await ExercisesService.create(body)
 		},
 		{
@@ -42,10 +41,16 @@ export const exercisesController = new Elysia({ prefix: '/exercises' })
 		}
 	)
 	// update
-	.patch('/:id', async ({ ExercisesService, params: { id }, body }) => {
-		// @ts-expect-error (we will use the schema from Drizzle later)
-		await ExercisesService.update(id, body)
-	})
+	.patch(
+		'/:id',
+		async ({ ExercisesService, params: { id }, body }) => {
+			// @ts-expect-error (we will use the schema from Drizzle later)
+			await ExercisesService.update(id, body)
+		},
+		{
+			body: insertSchema
+		}
+	)
 	// delete
 	.delete('/:id', async ({ ExercisesService, params: { id } }) => {
 		await ExercisesService.delete(id)

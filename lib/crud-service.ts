@@ -1,5 +1,5 @@
 import { db } from '@/db/connection'
-import { SQL, eq } from 'drizzle-orm'
+import { type InferInsertModel, eq } from 'drizzle-orm'
 import { PgTable } from 'drizzle-orm/pg-core'
 import { createInsertSchema } from 'drizzle-typebox'
 
@@ -29,12 +29,8 @@ class CRUDController<T extends PgTable & TableWithId> {
 		return result[0]
 	}
 
-	async create(data: Partial<ReturnType<typeof createInsertSchema<T>>>) {
-		const [result] = await this.db
-			.insert(this.model)
-			// @ts-expect-error holy crap this is hard
-			.values(data)
-			.returning()
+	async create(data: InferInsertModel<T>) {
+		const [result] = await this.db.insert(this.model).values(data).returning()
 		return result
 	}
 
