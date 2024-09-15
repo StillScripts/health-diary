@@ -1,13 +1,12 @@
 import { db } from '@/db/connection'
-import { type InferInsertModel, eq } from 'drizzle-orm'
+import { type InferInsertModel, InferSelectModel, eq } from 'drizzle-orm'
 import { PgTable } from 'drizzle-orm/pg-core'
-import { createInsertSchema } from 'drizzle-typebox'
 
-interface TableWithId {
-	id: any
-}
-
-class CRUDController<T extends PgTable & TableWithId> {
+class CRUDController<
+	T extends PgTable & {
+		id: any
+	}
+> {
 	db: typeof db
 	model: T
 
@@ -16,11 +15,11 @@ class CRUDController<T extends PgTable & TableWithId> {
 		this.model = model
 	}
 
-	async index() {
+	async index(): Promise<Array<InferSelectModel<T>>> {
 		return await this.db.select().from(this.model)
 	}
 
-	async show(id: string | number) {
+	async show(id: string | number): Promise<InferSelectModel<T>> {
 		const result = await this.db
 			.select()
 			.from(this.model)
@@ -36,11 +35,11 @@ class CRUDController<T extends PgTable & TableWithId> {
 
 	async update(
 		id: string | number,
-		data: Partial<ReturnType<typeof createInsertSchema<T>>>
+		data: Partial<Omit<InferInsertModel<T>, 'id'>>
 	) {
 		const [result] = await this.db
 			.update(this.model)
-			.set(data)
+			.set(data as any)
 			.where(eq(this.model.id, id))
 			.returning()
 		return result

@@ -1,8 +1,9 @@
-import { Elysia } from 'elysia'
+import { Elysia, t } from 'elysia'
 import { createInsertSchema } from 'drizzle-typebox'
 
 import { exercises } from '@/db/schema'
 import CRUDController from '@/lib/crud-service'
+import { withoutId } from '@/lib/utils'
 
 type ExercisesModel = typeof exercises
 
@@ -44,13 +45,26 @@ export const exercisesController = new Elysia({ prefix: '/exercises' })
 	.patch(
 		'/:id',
 		async ({ ExercisesService, params: { id }, body }) => {
-			// @ts-expect-error (we will use the schema from Drizzle later)
 			await ExercisesService.update(id, body)
 		},
 		{
-			body: insertSchema
+			body: t.Partial(withoutId(insertSchema))
 		}
 	)
+	// .patch(
+	// 	'/:id',
+	// 	async ({ params, body }) => {
+	// 		const [todo] = await db
+	// 			.update(todos)
+	// 			.set(body)
+	// 			.where(eq(todos.id, params.id))
+	// 			.returning()
+	// 		return todo
+	// 	},
+	// 	{
+	// 		body: t.Partial(withoutId(TodoInsertSchema))
+	// 	}
+	// )
 	// delete
 	.delete('/:id', async ({ ExercisesService, params: { id } }) => {
 		await ExercisesService.delete(id)
