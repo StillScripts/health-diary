@@ -1,5 +1,5 @@
 import { Elysia, t } from 'elysia'
-import { createInsertSchema } from 'drizzle-typebox'
+import { createInsertSchema, createSelectSchema } from 'drizzle-typebox'
 
 import { exercises } from '@/db/schema'
 import CRUDController from '@/lib/crud-controller'
@@ -18,6 +18,7 @@ class ExercisesController extends CRUDController<typeof exercises> {
 
 /** Validate inputs for the `exercises` model */
 const insertSchema = createInsertSchema(exercises)
+const selectSchema = createSelectSchema(exercises)
 
 /** Handle routes for the `exercises` model */
 export const exercisesRouter = new Elysia({ prefix: '/exercises' })
@@ -27,13 +28,19 @@ export const exercisesRouter = new Elysia({ prefix: '/exercises' })
 	// index
 	.get(
 		'/',
-		async ({ ExercisesController }) => await ExercisesController.index()
+		async ({ ExercisesController }) => await ExercisesController.index(),
+		{
+			response: t.Array(selectSchema)
+		}
 	)
 	// show
 	.get(
 		'/:id',
 		async ({ ExercisesController, params: { id } }) =>
-			await ExercisesController.show(id)
+			await ExercisesController.show(id),
+		{
+			response: selectSchema
+		}
 	)
 	// create
 	.post(
@@ -62,5 +69,8 @@ export const exercisesRouter = new Elysia({ prefix: '/exercises' })
 	// example route that goes beyond the core CRUD routes
 	.get(
 		'/featured',
-		async ({ ExercisesController }) => await ExercisesController.featured()
+		async ({ ExercisesController }) => await ExercisesController.featured(),
+		{
+			response: t.Array(selectSchema)
+		}
 	)
