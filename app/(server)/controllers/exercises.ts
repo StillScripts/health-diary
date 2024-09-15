@@ -1,17 +1,16 @@
-// app/api/[[...slugs]]/route.ts
-import { Elysia, t } from 'elysia'
+import { Elysia } from 'elysia'
 
 import { exercises } from '@/db/schema'
 import CRUDController from '@/lib/crud-service'
-import { desc } from 'drizzle-orm'
 
 type ThisModel = typeof exercises
+
 class ExercisesService extends CRUDController<ThisModel> {
 	constructor(model: ThisModel) {
 		super(model)
 	}
 
-	async recentThree() {
+	async featured() {
 		return await this.db.select().from(this.model).limit(3)
 	}
 }
@@ -44,8 +43,8 @@ export const exercisesController = new Elysia({ prefix: '/exercises' })
 		await ExercisesService.delete(id)
 	})
 	// NOTE new & edit are Rails methods for UI, we can manage these on the frontend
-	// Other routes
+	// Other routes example
 	.get(
-		'/recent-three',
-		async ({ ExercisesService }) => await ExercisesService.recentThree()
+		'/featured',
+		async ({ ExercisesService }) => await ExercisesService.featured()
 	)
