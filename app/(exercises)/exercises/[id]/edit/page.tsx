@@ -1,21 +1,21 @@
 import { ExerciseForm } from '@/app/(exercises)/_components/forms/exercise-form'
-import { getExercise } from '@/app/(server)/actions/exercises'
+import { app } from '@/app/treaty'
 import { getServerUser } from '@/lib/supabase/server'
 import { notFound, redirect } from 'next/navigation'
 
 const EditExercise = async ({ params }: { params: { id: string } }) => {
-  const session = await getServerUser()
-  if (!session?.data?.user?.id || !params.id) {
-    redirect('/exercises')
-  }
+	const session = await getServerUser()
+	if (!session?.data?.user?.id || !params.id) {
+		redirect('/exercises')
+	}
 
-  const exercise = await getExercise({ id: params.id })
+	const { data, error } = await app.api.exercises({ id: params.id }).get()
 
-  if (!exercise?.id) {
-    notFound()
-  }
+	if (error) {
+		notFound()
+	}
 
-  return <ExerciseForm exercise={exercise} />
+	return <ExerciseForm exercise={data} />
 }
 
 export default EditExercise

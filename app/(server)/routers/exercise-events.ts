@@ -48,6 +48,7 @@ export const exerciseEventsRouter = new Elysia({ prefix: '/exercise-events' })
 	.patch(
 		'/:id',
 		async ({ ExerciseEventsController, params: { id }, body }) => {
+			console.log(body)
 			await ExerciseEventsController.update(id, body)
 		},
 		{
