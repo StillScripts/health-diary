@@ -1,6 +1,7 @@
 import { db } from '@/db/connection'
 import { type InferInsertModel, InferSelectModel, eq } from 'drizzle-orm'
 import { PgTable } from 'drizzle-orm/pg-core'
+import { revalidatePath } from 'next/cache'
 
 class CRUDController<
 	T extends PgTable & {
@@ -42,6 +43,7 @@ class CRUDController<
 			.set(data as any)
 			.where(eq(this.model.id, id))
 			.returning()
+		revalidatePath(`/exercises/${id}/edit`)
 		return result
 	}
 

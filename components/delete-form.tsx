@@ -12,11 +12,9 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger
 } from '@/components/ui/alert-dialog'
-import { useForm } from 'react-hook-form'
 import { Button, type ButtonProps } from './ui/button'
 import { app } from '@/app/treaty'
 import { useErrorOrRedirect } from '@/lib/hooks/use-error-or-redirect'
-import { useUser } from '@/lib/supabase/user-context'
 
 export function DeleteForm({
 	buttonProps,
@@ -31,7 +29,6 @@ export function DeleteForm({
 	id: string
 	apiRouteKey: keyof (typeof app)['api']
 }) {
-	const { user } = useUser()
 	const { handleResponse } = useErrorOrRedirect()
 
 	const handleDelete = async () => {
@@ -46,7 +43,7 @@ export function DeleteForm({
 		<AlertDialog>
 			<AlertDialogTrigger asChild>
 				<Button size="sm" variant="destructive" {...buttonProps}>
-					Delete {user?.data?.user?.id}
+					Delete
 				</Button>
 			</AlertDialogTrigger>
 			<AlertDialogContent>
