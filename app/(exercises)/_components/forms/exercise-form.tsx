@@ -59,7 +59,6 @@ export function ExerciseForm({
 			//console.log(error)
 		} else {
 			alert('trying')
-			// this is where we can update
 			const { data, error } = await app.api
 				.exercises({ id: exercise.id })
 				.patch(userData)
