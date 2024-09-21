@@ -30,10 +30,7 @@ import {
 import { useForm } from 'react-hook-form'
 import { Textarea } from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
-import {
-	type ExerciseEvent,
-	updateExerciseEvent
-} from '@/app/(server)/actions/exercise-events'
+import { type ExerciseEvent } from '@/app/(server)/actions/exercise-events'
 import {
 	type ExerciseEventSchema,
 	exerciseEventSchema
@@ -41,6 +38,7 @@ import {
 import { SubmittingButton } from '@/components/pending-button'
 import { app } from '@/app/treaty'
 import { useErrorOrRedirect } from '@/lib/hooks/use-error-or-redirect'
+import { useUserSession } from '@/lib/supabase/user-context'
 
 const getHoursAndMinutes = (date?: Date | null) => {
 	if (!date) {
@@ -54,34 +52,39 @@ const getHoursAndMinutes = (date?: Date | null) => {
 export function ExerciseEventForm({
 	exerciseEvent
 }: {
-	exerciseEvent: NonNullable<ExerciseEvent>
+	exerciseEvent?: NonNullable<ExerciseEvent>
 }) {
 	const date = exerciseEvent?.date ? new Date(exerciseEvent.date) : new Date()
 
 	const form = useForm<ExerciseEventSchema>({
 		resolver: zodResolver(exerciseEventSchema),
 		defaultValues: {
-			id: exerciseEvent.id,
 			date,
 			startTime: exerciseEvent?.startTime ?? getHoursAndMinutes(date), // default to current moment
 			endTime: exerciseEvent?.endTime ?? undefined,
 			notes: exerciseEvent?.notes ?? undefined
 		}
 	})
+	const { user } = useUserSession()
 	const { handleResponse } = useErrorOrRedirect()
 
 	async function onSubmit(data: ExerciseEventSchema) {
+		const userId = user?.data?.user?.id
+		if (!userId) {
+			throw new Error('Unauthorised')
+		}
+
 		if (!exerciseEvent?.id) {
 			const { error } = await app.api['exercise-events'].index.post({
 				...data,
 				date: data.date as unknown as string,
-				userId: ''
+				userId
 			})
 			handleResponse(error, '/exercise-sessions')
 		} else {
 			const { error } = await app.api['exercise-events']({
 				id: exerciseEvent.id
-			}).patch({ ...data, date: data.date as unknown as string, userId: '' })
+			}).patch({ ...data, date: data.date as unknown as string, userId })
 			handleResponse(error, '/exercise-sessions')
 		}
 	}

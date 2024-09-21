@@ -3,6 +3,10 @@ import { app } from '@/app/treaty'
 import { getServerUser } from '@/lib/supabase/server'
 import { notFound, redirect } from 'next/navigation'
 
+export const metadata = {
+	title: 'Edit Exercise Session'
+}
+
 const EditExerciseEvent = async ({
 	params,
 	searchParams

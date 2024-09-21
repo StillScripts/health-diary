@@ -17,6 +17,10 @@ import Link from 'next/link'
 import { DeleteExerciseEventButton } from '@/app/(exercises)/_components/buttons/delete-exercise-event'
 import { app } from '@/app/treaty'
 
+export const metadata = {
+	title: 'Exercise Sessions'
+}
+
 const formatTimeString = (timeString: string | null) => {
 	if (!timeString) {
 		return null
