@@ -5,9 +5,10 @@ import { exerciseEventsRouter } from '@/app/(server)/routers/exercise-events'
 import swagger from '@elysiajs/swagger'
 import { logger } from '@tqman/nice-logger'
 
+// Never cache this api, cache only on the frontend
 export const dynamic = 'force-dynamic'
 
-//https://github.com/tanishqmanuja/todos-react-elysia/tree/main/server
+// Example: https://github.com/tanishqmanuja/todos-react-elysia/tree/main/server
 
 const app = new Elysia({ prefix: '/api' })
 	.use(swagger())

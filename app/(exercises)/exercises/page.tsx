@@ -1,4 +1,3 @@
-import { AddExerciseButton } from '../_components/buttons/add-exercise'
 import {
 	Table,
 	TableBody,
@@ -11,18 +10,21 @@ import {
 import { ExercisePageHeader } from '../_components/layout/exercise-page-header'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { DeleteExerciseButton } from '../_components/buttons/delete-exercise'
 import { app } from '@/app/treaty'
+import { DeleteForm } from '@/components/delete-form'
 
 export default async function Exercises() {
 	const { data, error } = await app.api.exercises.index.get()
 	if (error) {
 		throw new Error('An error occurred')
 	}
+
 	return (
 		<>
 			<ExercisePageHeader heading="Exercises">
-				<AddExerciseButton />
+				<Button asChild>
+					<Link href="/exercises/new">Add New Exercise</Link>
+				</Button>
 			</ExercisePageHeader>
 			<div className="mt-8">
 				<Table>
@@ -50,7 +52,7 @@ export default async function Exercises() {
 									</Button>
 								</TableCell>
 								<TableCell>
-									<DeleteExerciseButton exercise={exercise} />
+									<DeleteForm id={exercise.id} apiRouteKey="exercises" />
 								</TableCell>
 							</TableRow>
 						))}

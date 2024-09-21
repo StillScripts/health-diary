@@ -5,6 +5,10 @@ import { createInsertSchema, createSelectSchema } from 'drizzle-typebox'
 import { exercises } from '@/db/schema'
 import CRUDController from '@/lib/crud-controller'
 import { nanoid, withoutId } from '@/lib/utils'
+import { revalidatePath } from 'next/cache'
+import { redirect } from 'next/navigation'
+
+const prefix = '/exercises'
 
 /** Control how the application can interact with the `exercises` model */
 class ExercisesController extends CRUDController<typeof exercises> {
@@ -23,7 +27,7 @@ const insertSchema = createInsertSchema(exercises)
 const selectSchema = createSelectSchema(exercises)
 
 /** Handle routes for the `exercises` model */
-export const exercisesRouter = new Elysia({ prefix: '/exercises' })
+export const exercisesRouter = new Elysia({ prefix })
 	.decorate({
 		ExercisesController: new ExercisesController()
 	})
@@ -51,7 +55,11 @@ export const exercisesRouter = new Elysia({ prefix: '/exercises' })
 			await ExercisesController.create({ id: `ex_${nanoid(10)}`, ...body })
 		},
 		{
-			body: withoutId(insertSchema)
+			body: withoutId(insertSchema),
+			afterHandle() {
+				revalidatePath(prefix)
+				redirect(prefix)
+			}
 		}
 	)
 	// update
@@ -61,13 +69,24 @@ export const exercisesRouter = new Elysia({ prefix: '/exercises' })
 			await ExercisesController.update(id, body)
 		},
 		{
-			body: t.Partial(withoutId(insertSchema))
+			body: t.Partial(withoutId(insertSchema)),
+			afterHandle() {
+				revalidatePath(prefix)
+			}
 		}
 	)
 	// delete
-	.delete('/:id', async ({ ExercisesController, params: { id } }) => {
-		await ExercisesController.delete(id)
-	})
+	.delete(
+		'/:id',
+		async ({ ExercisesController, params: { id } }) => {
+			await ExercisesController.delete(id)
+		},
+		{
+			afterHandle() {
+				revalidatePath(prefix)
+			}
+		}
+	)
 	// example route that goes beyond the core CRUD routes
 	.get(
 		'/featured',

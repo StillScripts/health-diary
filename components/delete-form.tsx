@@ -1,0 +1,66 @@
+'use client'
+import { Form } from '@/components/ui/form'
+
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger
+} from '@/components/ui/alert-dialog'
+import { useForm } from 'react-hook-form'
+import { Button, type ButtonProps } from './ui/button'
+import { app } from '@/app/treaty'
+
+export function DeleteForm({
+	buttonProps,
+	title = 'Are you sure?',
+	description = `This will permanently delete this item.`,
+	id,
+	apiRouteKey
+}: {
+	title?: string
+	description?: string
+	buttonProps?: ButtonProps
+	id: string
+	apiRouteKey: keyof (typeof app)['api']
+}) {
+	const form = useForm()
+
+	const onSubmit = async () => {
+		switch (apiRouteKey) {
+			default:
+				const { error } = await app.api.exercises({ id }).delete()
+				console.log(error)
+		}
+	}
+	return (
+		<AlertDialog>
+			<AlertDialogTrigger asChild>
+				<Button size="sm" variant="destructive" {...buttonProps}>
+					Delete
+				</Button>
+			</AlertDialogTrigger>
+			<AlertDialogContent>
+				<AlertDialogHeader>
+					<AlertDialogTitle>{title}</AlertDialogTitle>
+					<AlertDialogDescription>{description}</AlertDialogDescription>
+				</AlertDialogHeader>
+				<AlertDialogFooter>
+					<AlertDialogCancel>Cancel</AlertDialogCancel>
+					<Form {...form}>
+						<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+							<AlertDialogAction type="submit" className="w-full sm:w-auto">
+								Confirm
+							</AlertDialogAction>
+						</form>
+					</Form>
+				</AlertDialogFooter>
+			</AlertDialogContent>
+		</AlertDialog>
+	)
+}

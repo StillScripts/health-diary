@@ -5,7 +5,8 @@ import { notFound, redirect } from 'next/navigation'
 
 const EditExercise = async ({ params }: { params: { id: string } }) => {
 	const session = await getServerUser()
-	if (!session?.data?.user?.id || !params.id) {
+	const userId = session?.data?.user?.id
+	if (!userId || !params.id) {
 		redirect('/exercises')
 	}
 
@@ -15,7 +16,7 @@ const EditExercise = async ({ params }: { params: { id: string } }) => {
 		notFound()
 	}
 
-	return <ExerciseForm exercise={data} />
+	return <ExerciseForm exercise={data} userId={userId} />
 }
 
 export default EditExercise

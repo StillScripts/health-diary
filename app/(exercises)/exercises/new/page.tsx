@@ -6,13 +6,14 @@ export const metadata = {
 	title: 'New Exercise'
 }
 
-const EditExercise = async () => {
+const NewExercise = async () => {
 	const session = await getServerUser()
-	if (!session?.data?.user?.id) {
+	const userId = session?.data?.user?.id
+	if (!userId) {
 		redirect('/exercises')
 	}
 
-	return <ExerciseForm />
+	return <ExerciseForm userId={userId} />
 }
 
-export default EditExercise
+export default NewExercise

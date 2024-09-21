@@ -38,9 +38,11 @@ import { FormToast } from '@/components/form-toast'
 import { app } from '@/app/treaty'
 
 export function ExerciseForm({
-	exercise
+	exercise,
+	userId
 }: {
 	exercise?: NonNullable<Exercise>
+	userId: string
 }) {
 	const form = useForm<ExerciseSchema>({
 		resolver: zodResolver(exerciseSchema),
@@ -51,15 +53,16 @@ export function ExerciseForm({
 		}
 	})
 
+	/** Create or update an exercise entry */
 	async function onSubmit(userData: ExerciseSchema) {
 		if (!exercise?.id) {
-			// this is where we could create
-			alert('creating')
-			//const { data, error } = await app.api.exercises.index.post(userData)
-			//console.log(error)
+			const { error } = await app.api.exercises.index.post({
+				...userData,
+				userId
+			})
+			console.log(error)
 		} else {
-			alert('trying')
-			const { data, error } = await app.api
+			const { error } = await app.api
 				.exercises({ id: exercise.id })
 				.patch(userData)
 			console.log(error)
