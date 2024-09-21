@@ -36,6 +36,7 @@ import {
 import { SubmittingButton } from '@/components/pending-button'
 import { FormToast } from '@/components/form-toast'
 import { app } from '@/app/treaty'
+import { useRouter } from 'next/navigation'
 
 export function ExerciseForm({
 	exercise,
@@ -44,6 +45,7 @@ export function ExerciseForm({
 	exercise?: NonNullable<Exercise>
 	userId: string
 }) {
+	const router = useRouter()
 	const form = useForm<ExerciseSchema>({
 		resolver: zodResolver(exerciseSchema),
 		defaultValues: {
@@ -53,6 +55,13 @@ export function ExerciseForm({
 		}
 	})
 
+	const errorOrRedirect = (error: unknown) => {
+		if (error) {
+			throw new Error('An error occurred')
+		}
+		router.push('/exercises')
+	}
+
 	/** Create or update an exercise entry */
 	async function onSubmit(userData: ExerciseSchema) {
 		if (!exercise?.id) {
@@ -60,12 +69,12 @@ export function ExerciseForm({
 				...userData,
 				userId
 			})
-			console.log(error)
+			errorOrRedirect(error)
 		} else {
 			const { error } = await app.api
 				.exercises({ id: exercise.id })
 				.patch(userData)
-			console.log(error)
+			errorOrRedirect(error)
 		}
 	}
 
