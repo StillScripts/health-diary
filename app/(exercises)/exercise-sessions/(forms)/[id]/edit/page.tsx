@@ -4,34 +4,32 @@ import { getExercises } from '@/app/(server)/actions/exercises'
 import { getServerUser } from '@/lib/supabase/server'
 import { notFound, redirect } from 'next/navigation'
 
-//export const revalidate = 0
-
 const EditExerciseEvent = async ({
-  params,
-  searchParams
+	params,
+	searchParams
 }: {
-  params: { id: string }
-  searchParams?: { tab?: string }
+	params: { id: string }
+	searchParams?: { tab?: string }
 }) => {
-  const session = await getServerUser()
-  if (!session?.data?.user?.id || !params.id) {
-    redirect('/exercise-sessions')
-  }
+	const session = await getServerUser()
+	if (!session?.data?.user?.id || !params.id) {
+		redirect('/exercise-sessions')
+	}
 
-  const exerciseEvent = await getExerciseEvent({ id: params.id })
-  const exercises = await getExercises()
+	const exerciseEvent = await getExerciseEvent({ id: params.id })
+	const exercises = await getExercises()
 
-  if (!exerciseEvent?.id) {
-    notFound()
-  }
+	if (!exerciseEvent?.id) {
+		notFound()
+	}
 
-  return (
-    <ExerciseSessionForm
-      exerciseEvent={exerciseEvent}
-      exercises={exercises}
-      tab={searchParams?.tab}
-    />
-  )
+	return (
+		<ExerciseSessionForm
+			exerciseEvent={exerciseEvent}
+			exercises={exercises}
+			tab={searchParams?.tab}
+		/>
+	)
 }
 
 export default EditExerciseEvent
