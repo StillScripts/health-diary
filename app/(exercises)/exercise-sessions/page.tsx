@@ -36,7 +36,9 @@ export default async function ExerciseSessions() {
 	return (
 		<>
 			<ExercisePageHeader heading="Exercise Sessions">
-				<AddExerciseEventButton />
+				<Button asChild>
+					<Link href="/exercise-sessions/new">Add New Exercise</Link>
+				</Button>
 			</ExercisePageHeader>
 
 			<div className="mt-8">
