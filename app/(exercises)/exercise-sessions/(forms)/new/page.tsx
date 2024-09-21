@@ -1,19 +1,11 @@
-import { ExerciseForm } from '@/app/(exercises)/_components/forms/exercise-form'
-import { getServerUser } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
+import ExerciseSessionForm from '@/app/(exercises)/_components/exercise-session-form'
 
 export const metadata = {
 	title: 'New Exercise'
 }
 
 const NewExercise = async () => {
-	const session = await getServerUser()
-	const userId = session?.data?.user?.id
-	if (!userId) {
-		redirect('/exercises')
-	}
-
-	return <ExerciseForm userId={userId} />
+	return <ExerciseSessionForm />
 }
 
 export default NewExercise

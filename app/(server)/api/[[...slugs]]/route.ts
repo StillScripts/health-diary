@@ -3,7 +3,7 @@ import { Elysia } from 'elysia'
 import { exercisesRouter } from '@/app/(server)/routers/exercises'
 import { exerciseEventsRouter } from '@/app/(server)/routers/exercise-events'
 import swagger from '@elysiajs/swagger'
-import { logger } from '@tqman/nice-logger'
+import { exerciseSetsRouter } from '@/app/(server)/routers/exercise-sets'
 
 // Never cache this api, cache only on the frontend
 export const dynamic = 'force-dynamic'
@@ -12,9 +12,9 @@ export const dynamic = 'force-dynamic'
 
 const app = new Elysia({ prefix: '/api' })
 	.use(swagger())
-	.use(logger())
 	.use(exercisesRouter)
 	.use(exerciseEventsRouter)
+	.use(exerciseSetsRouter)
 	.get('/', () => 'hello Next')
 
 export type App = typeof app

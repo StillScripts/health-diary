@@ -15,8 +15,8 @@ export default function ExerciseSessionForm({
 	exercises,
 	tab
 }: {
-	exerciseEvent: NonNullable<ExerciseEvent>
-	exercises: Array<NonNullable<Exercise>>
+	exerciseEvent?: NonNullable<ExerciseEvent>
+	exercises?: Array<NonNullable<Exercise>>
 	tab?: string
 }) {
 	const router = useRouter()
@@ -45,8 +45,8 @@ export default function ExerciseSessionForm({
 			<TabsContent value={TABS[1]}>
 				<ExerciseSetsForm
 					exercises={exercises}
-					exerciseSets={exerciseEvent.exerciseSets}
-					exerciseEventId={exerciseEvent.id}
+					exerciseSets={exerciseEvent?.exerciseSets}
+					exerciseEventId={exerciseEvent?.id}
 				/>
 			</TabsContent>
 		</Tabs>

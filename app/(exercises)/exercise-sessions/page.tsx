@@ -37,6 +37,7 @@ export default async function ExerciseSessions() {
 	if (error) {
 		throw new Error('An error occurred')
 	}
+	console.log(data)
 	return (
 		<>
 			<ExercisePageHeader heading="Exercise Sessions">

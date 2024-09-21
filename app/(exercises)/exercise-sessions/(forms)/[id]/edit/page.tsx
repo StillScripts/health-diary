@@ -1,7 +1,7 @@
 import ExerciseSessionForm from '@/app/(exercises)/_components/exercise-session-form'
 import { app } from '@/app/treaty'
-import { getServerUser } from '@/lib/supabase/server'
-import { notFound, redirect } from 'next/navigation'
+
+import { notFound } from 'next/navigation'
 
 export const metadata = {
 	title: 'Edit Exercise Session'
@@ -14,11 +14,6 @@ const EditExerciseEvent = async ({
 	params: { id: string }
 	searchParams?: { tab?: string }
 }) => {
-	const session = await getServerUser()
-	if (!session?.data?.user?.id || !params.id) {
-		redirect('/exercise-sessions')
-	}
-
 	const exerciseEvent = await app.api['exercise-events']
 		['with-sets']({
 			id: params.id
