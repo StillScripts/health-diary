@@ -37,7 +37,7 @@ export default async function ExerciseSessions() {
 		<>
 			<ExercisePageHeader heading="Exercise Sessions">
 				<Button asChild>
-					<Link href="/exercise-sessions/new">Add New Exercise</Link>
+					<Link href="/exercise-sessions/new">New Exercise Session</Link>
 				</Button>
 			</ExercisePageHeader>
 

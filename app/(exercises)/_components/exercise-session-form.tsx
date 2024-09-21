@@ -5,7 +5,6 @@ import type { ExerciseEvent } from '@/app/(server)/actions/exercise-events'
 import type { Exercise } from '@/app/(server)/actions/exercises'
 import { ExerciseSetsForm } from './forms/exercise-sets-form'
 import { usePathname, useRouter } from 'next/navigation'
-import { Skeleton } from '@/components/ui/skeleton'
 import type { Route } from 'next'
 
 const TABS = ['Summary', 'Activities'] as const

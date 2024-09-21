@@ -1,6 +1,5 @@
 import ExerciseSessionForm from '@/app/(exercises)/_components/exercise-session-form'
-import { getExerciseEvent } from '@/app/(server)/actions/exercise-events'
-import { getExercises } from '@/app/(server)/actions/exercises'
+import { app } from '@/app/treaty'
 import { getServerUser } from '@/lib/supabase/server'
 import { notFound, redirect } from 'next/navigation'
 
@@ -16,17 +15,21 @@ const EditExerciseEvent = async ({
 		redirect('/exercise-sessions')
 	}
 
-	const exerciseEvent = await getExerciseEvent({ id: params.id })
-	const exercises = await getExercises()
+	const exerciseEvent = await app.api['exercise-events']
+		['with-sets']({
+			id: params.id
+		})
+		.get()
+	const exercises = await app.api.exercises.index.get()
 
-	if (!exerciseEvent?.id) {
+	if (exerciseEvent.error || exercises.error) {
 		notFound()
 	}
 
 	return (
 		<ExerciseSessionForm
-			exerciseEvent={exerciseEvent}
-			exercises={exercises}
+			exerciseEvent={exerciseEvent.data!}
+			exercises={exercises.data}
 			tab={searchParams?.tab}
 		/>
 	)
