@@ -55,7 +55,10 @@ export const exerciseEventsRouter = new Elysia({ prefix })
 	.post(
 		'/',
 		async ({ ExerciseEventsController, body }) => {
-			await ExerciseEventsController.create({ id: `ee_${nanoid(10)}`, ...body })
+			return await ExerciseEventsController.create({
+				id: `ee_${nanoid(10)}`,
+				...body
+			})
 		},
 		{
 			body: withoutId(insertSchema)

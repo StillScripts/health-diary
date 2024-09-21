@@ -68,6 +68,7 @@ export function ExerciseForm({
 				...userData,
 				userId
 			})
+
 			handleResponse(error, '/exercises')
 		} else {
 			const { error } = await app.api

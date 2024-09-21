@@ -22,7 +22,6 @@ export default function ExerciseSessionForm({
 	const router = useRouter()
 	const pathname = usePathname()
 	const index = TABS.findIndex(t => t.toLowerCase() === tab)
-	console.log(index)
 
 	return (
 		<Tabs
