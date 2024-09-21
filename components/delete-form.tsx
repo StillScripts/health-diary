@@ -15,6 +15,7 @@ import {
 import { useForm } from 'react-hook-form'
 import { Button, type ButtonProps } from './ui/button'
 import { app } from '@/app/treaty'
+import { useErrorOrRedirect } from '@/lib/hooks/use-error-or-redirect'
 
 export function DeleteForm({
 	buttonProps,
@@ -30,12 +31,13 @@ export function DeleteForm({
 	apiRouteKey: keyof (typeof app)['api']
 }) {
 	const form = useForm()
+	const { handleResponse } = useErrorOrRedirect()
 
-	const onSubmit = async () => {
+	const handleDelete = async () => {
 		switch (apiRouteKey) {
 			default:
 				const { error } = await app.api.exercises({ id }).delete()
-				console.log(error)
+				handleResponse(error, '/exercises')
 		}
 	}
 	return (
@@ -52,13 +54,15 @@ export function DeleteForm({
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					<AlertDialogCancel>Cancel</AlertDialogCancel>
-					<Form {...form}>
-						<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-							<AlertDialogAction type="submit" className="w-full sm:w-auto">
-								Confirm
-							</AlertDialogAction>
-						</form>
-					</Form>
+
+					<div className="space-y-8">
+						<AlertDialogAction
+							onClick={handleDelete}
+							className="w-full sm:w-auto"
+						>
+							Confirm
+						</AlertDialogAction>
+					</div>
 				</AlertDialogFooter>
 			</AlertDialogContent>
 		</AlertDialog>

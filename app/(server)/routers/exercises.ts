@@ -6,7 +6,6 @@ import { exercises } from '@/db/schema'
 import CRUDController from '@/lib/crud-controller'
 import { nanoid, withoutId } from '@/lib/utils'
 import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/navigation'
 
 const prefix = '/exercises'
 
@@ -58,7 +57,6 @@ export const exercisesRouter = new Elysia({ prefix })
 			body: withoutId(insertSchema),
 			afterHandle() {
 				revalidatePath(prefix)
-				redirect(prefix)
 			}
 		}
 	)
