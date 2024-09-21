@@ -37,6 +37,7 @@ import { SubmittingButton } from '@/components/pending-button'
 import { FormToast } from '@/components/form-toast'
 import { app } from '@/app/treaty'
 import { useRouter } from 'next/navigation'
+import { useErrorOrRedirect } from '@/lib/hooks/use-error-or-redirect'
 
 export function ExerciseForm({
 	exercise,
@@ -54,13 +55,7 @@ export function ExerciseForm({
 			activityType: exercise?.activityType ?? 'Body Weight'
 		}
 	})
-
-	const errorOrRedirect = (error: unknown) => {
-		if (error) {
-			throw new Error('An error occurred')
-		}
-		router.push('/exercises')
-	}
+	const { handleResponse } = useErrorOrRedirect()
 
 	/** Create or update an exercise entry */
 	async function onSubmit(userData: ExerciseSchema) {
@@ -69,12 +64,12 @@ export function ExerciseForm({
 				...userData,
 				userId
 			})
-			errorOrRedirect(error)
+			handleResponse(error, '/exercises')
 		} else {
 			const { error } = await app.api
 				.exercises({ id: exercise.id })
 				.patch(userData)
-			errorOrRedirect(error)
+			handleResponse(error, '/exercises')
 		}
 	}
 
