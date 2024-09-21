@@ -33,7 +33,11 @@ export default function ExerciseSessionForm({
 		>
 			<TabsList className="grid w-full grid-cols-2">
 				{TABS.map(tab => (
-					<TabsTrigger key={tab} value={tab}>
+					<TabsTrigger
+						key={tab}
+						value={tab}
+						disabled={!pathname.includes('edit')}
+					>
 						{tab}
 					</TabsTrigger>
 				))}

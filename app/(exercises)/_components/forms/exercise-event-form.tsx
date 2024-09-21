@@ -68,24 +68,37 @@ export function ExerciseEventForm({
 	const { user } = useUserSession()
 	const { handleResponse } = useErrorOrRedirect()
 
-	async function onSubmit(data: ExerciseEventSchema) {
+	async function onSubmit(userData: ExerciseEventSchema) {
 		const userId = user?.data?.user?.id
 		if (!userId) {
 			throw new Error('Unauthorised')
 		}
 
 		if (!exerciseEvent?.id) {
-			const { error } = await app.api['exercise-events'].index.post({
-				...data,
-				date: data.date as unknown as string,
+			const { data, error } = await app.api['exercise-events'].index.post({
+				...userData,
+				date: userData.date as unknown as string,
 				userId
 			})
-			handleResponse(error, '/exercise-sessions')
+
+			handleResponse(
+				error,
+				// @ts-expect-error
+				`/exercise-sessions/${data?.id}/edit?tab=activities`
+			)
 		} else {
 			const { error } = await app.api['exercise-events']({
 				id: exerciseEvent.id
-			}).patch({ ...data, date: data.date as unknown as string, userId })
-			handleResponse(error, '/exercise-sessions')
+			}).patch({
+				...userData,
+				date: userData.date as unknown as string,
+				userId
+			})
+			handleResponse(
+				error,
+				// @ts-expect-error
+				`/exercise-sessions/${data?.id}/edit?tab=activities`
+			)
 		}
 	}
 
