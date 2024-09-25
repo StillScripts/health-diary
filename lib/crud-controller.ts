@@ -1,6 +1,8 @@
 import { db } from '@/db/connection'
 import { type InferInsertModel, InferSelectModel, eq } from 'drizzle-orm'
 import { PgTable } from 'drizzle-orm/pg-core'
+import type { Route } from 'next'
+import { revalidatePath } from 'next/cache'
 
 class CRUDController<
 	T extends PgTable & {
@@ -9,10 +11,12 @@ class CRUDController<
 > {
 	db: typeof db
 	model: T
+	prefix: Route
 
-	constructor(model: T) {
+	constructor(model: T, prefix: Route) {
 		this.db = db
 		this.model = model
+		this.prefix = prefix
 	}
 
 	async index(): Promise<Array<InferSelectModel<T>>> {
@@ -30,6 +34,7 @@ class CRUDController<
 
 	async create(data: InferInsertModel<T>) {
 		const [result] = await this.db.insert(this.model).values(data).returning()
+		revalidatePath(this.prefix)
 		return result
 	}
 
@@ -42,6 +47,8 @@ class CRUDController<
 			.set(data as any)
 			.where(eq(this.model.id, id))
 			.returning()
+		revalidatePath(this.prefix)
+		revalidatePath(`${this.prefix}/${id}/edit`)
 		return result
 	}
 
@@ -50,6 +57,7 @@ class CRUDController<
 			.delete(this.model)
 			.where(eq(this.model.id, id))
 			.returning()
+		revalidatePath(this.prefix)
 		return result
 	}
 }

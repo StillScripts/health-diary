@@ -36,17 +36,16 @@ import {
 import { SubmittingButton } from '@/components/pending-button'
 import { FormToast } from '@/components/form-toast'
 import { app } from '@/app/treaty'
-import { useRouter } from 'next/navigation'
 import { useErrorOrRedirect } from '@/lib/hooks/use-error-or-redirect'
+import { useUserSession } from '@/lib/supabase/user-context'
 
 export function ExerciseForm({
-	exercise,
-	userId
+	exercise
 }: {
 	exercise?: NonNullable<Exercise>
-	userId: string
 }) {
-	const router = useRouter()
+	const { user } = useUserSession()
+
 	const form = useForm<ExerciseSchema>({
 		resolver: zodResolver(exerciseSchema),
 		defaultValues: {
@@ -59,11 +58,17 @@ export function ExerciseForm({
 
 	/** Create or update an exercise entry */
 	async function onSubmit(userData: ExerciseSchema) {
+		const userId = user?.data?.user?.id
+		if (!userId) {
+			throw new Error('Unauthenticated')
+		}
+
 		if (!exercise?.id) {
 			const { error } = await app.api.exercises.index.post({
 				...userData,
 				userId
 			})
+
 			handleResponse(error, '/exercises')
 		} else {
 			const { error } = await app.api

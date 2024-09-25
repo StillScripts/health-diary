@@ -1,5 +1,3 @@
-import { getExerciseEvents } from '@/app/(server)/actions/exercise-events'
-import { AddExerciseEventButton } from '@/app/(exercises)/_components/buttons/add-exercise-event'
 import {
 	Table,
 	TableBody,
@@ -14,8 +12,12 @@ import { format, parse } from 'date-fns'
 import { formatDate } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { DeleteExerciseEventButton } from '@/app/(exercises)/_components/buttons/delete-exercise-event'
 import { app } from '@/app/treaty'
+import { DeleteForm } from '@/components/delete-form'
+
+export const metadata = {
+	title: 'Exercise Sessions'
+}
 
 const formatTimeString = (timeString: string | null) => {
 	if (!timeString) {
@@ -33,10 +35,13 @@ export default async function ExerciseSessions() {
 	if (error) {
 		throw new Error('An error occurred')
 	}
+
 	return (
 		<>
 			<ExercisePageHeader heading="Exercise Sessions">
-				<AddExerciseEventButton />
+				<Button asChild>
+					<Link href="/exercise-sessions/new">New Exercise Session</Link>
+				</Button>
 			</ExercisePageHeader>
 
 			<div className="mt-8">
@@ -71,7 +76,7 @@ export default async function ExerciseSessions() {
 									</Button>
 								</TableCell>
 								<TableCell>
-									<DeleteExerciseEventButton exerciseEvent={event} />
+									<DeleteForm id={event.id} apiRouteKey="exercise-events" />
 								</TableCell>
 							</TableRow>
 						))}

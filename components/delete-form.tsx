@@ -12,9 +12,9 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger
 } from '@/components/ui/alert-dialog'
-import { useForm } from 'react-hook-form'
 import { Button, type ButtonProps } from './ui/button'
 import { app } from '@/app/treaty'
+import { useErrorOrRedirect } from '@/lib/hooks/use-error-or-redirect'
 
 export function DeleteForm({
 	buttonProps,
@@ -29,15 +29,20 @@ export function DeleteForm({
 	id: string
 	apiRouteKey: keyof (typeof app)['api']
 }) {
-	const form = useForm()
+	const { handleResponse } = useErrorOrRedirect()
 
-	const onSubmit = async () => {
+	const handleDelete = async () => {
+		let response = { error: null }
 		switch (apiRouteKey) {
+			case 'exercise-events':
+				response = await app.api['exercise-events']({ id }).delete()
+				handleResponse(response.error, '/exercise-sessions')
 			default:
-				const { error } = await app.api.exercises({ id }).delete()
-				console.log(error)
+				response = await app.api.exercises({ id }).delete()
+				handleResponse(response.error, '/exercises')
 		}
 	}
+
 	return (
 		<AlertDialog>
 			<AlertDialogTrigger asChild>
@@ -52,13 +57,15 @@ export function DeleteForm({
 				</AlertDialogHeader>
 				<AlertDialogFooter>
 					<AlertDialogCancel>Cancel</AlertDialogCancel>
-					<Form {...form}>
-						<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-							<AlertDialogAction type="submit" className="w-full sm:w-auto">
-								Confirm
-							</AlertDialogAction>
-						</form>
-					</Form>
+
+					<div className="space-y-8">
+						<AlertDialogAction
+							onClick={handleDelete}
+							className="w-full sm:w-auto"
+						>
+							Confirm
+						</AlertDialogAction>
+					</div>
 				</AlertDialogFooter>
 			</AlertDialogContent>
 		</AlertDialog>

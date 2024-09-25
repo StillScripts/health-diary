@@ -5,114 +5,57 @@ import { exercises } from '@/db/schema'
 import { getServerUser } from '@/lib/supabase/server'
 import { eq } from 'drizzle-orm'
 import { nanoid, type ActionStatus } from '@/lib/utils'
-import { ExerciseSchema } from '@/lib/validators/exercise-validator'
-import { revalidatePath } from 'next/cache'
 
 export const getExercise = async ({ id }: { id: string }) => {
-  return await db.query.exercises.findFirst({
-    where: eq(exercises.id, id)
-  })
+	return await db.query.exercises.findFirst({
+		where: eq(exercises.id, id)
+	})
 }
 
 export type Exercise = Awaited<ReturnType<typeof getExercise>>
 
 export const getExercises = async () => {
-  const session = await getServerUser()
-  const userId = session?.data?.user?.id
-  if (!userId) {
-    return []
-  }
-  return await db.query.exercises.findMany({
-    where: eq(exercises.userId, userId)
-  })
+	const session = await getServerUser()
+	const userId = session?.data?.user?.id
+	if (!userId) {
+		return []
+	}
+	return await db.query.exercises.findMany({
+		where: eq(exercises.userId, userId)
+	})
 }
 
 export const createExercise = async (
-  state: ActionStatus,
-  formData: FormData
+	state: ActionStatus,
+	formData: FormData
 ) => {
-  try {
-    const id = `ex_${nanoid(10)}`
+	try {
+		const id = `ex_${nanoid(10)}`
 
-    const session = await getServerUser()
-    const userId = session?.data?.user?.id
-    if (!userId) {
-      throw new Error('Unauthorised')
-    }
+		const session = await getServerUser()
+		const userId = session?.data?.user?.id
+		if (!userId) {
+			throw new Error('Unauthorised')
+		}
 
-    const newEvent = await db
-      .insert(exercises)
-      .values({
-        id,
-        userId
-      })
-      .returning()
-    if (!newEvent[0]?.id) {
-      throw new Error('An error occurred')
-    }
-    return {
-      id: newEvent[0]?.id,
-      success: true
-    }
-  } catch (error) {
-    return {
-      // @ts-expect-error
-      error: error.message
-    }
-  }
-}
-
-export const updateExercise = async ({
-  title,
-  description,
-  activityType,
-  id
-}: ExerciseSchema) => {
-  const session = await getServerUser()
-  if (!session?.data?.user?.id) {
-    throw new Error('Unauthorised')
-  }
-
-  const response = await db
-    .update(exercises)
-    .set({ title, description, activityType })
-    .where(eq(exercises.id, id))
-    .returning({ updatedId: exercises.id })
-
-  if (response[0].updatedId) {
-    revalidatePath(`/exercise/${response[0].updatedId}/edit`, 'page')
-  } else {
-    throw new Error('An error occurred')
-  }
-}
-
-export const deleteExercise = async (
-  state: ActionStatus,
-  formData: FormData
-) => {
-  try {
-    const session = await getServerUser()
-    const userId = session?.data?.user?.id
-    if (!userId) {
-      throw new Error('Unauthorised')
-    }
-
-    const exerciseId = formData.get('id') as string
-
-    if (!exerciseId) {
-      throw new Error('Missing exercise id')
-    }
-
-    await db.delete(exercises).where(eq(exercises.id, exerciseId))
-    revalidatePath('/exercises', 'page')
-
-    return {
-      success: true
-    }
-  } catch (error) {
-    return {
-      // @ts-expect-error
-      error: error.message
-    }
-  }
+		const newEvent = await db
+			.insert(exercises)
+			.values({
+				id,
+				userId
+			})
+			.returning()
+		if (!newEvent[0]?.id) {
+			throw new Error('An error occurred')
+		}
+		return {
+			id: newEvent[0]?.id,
+			success: true
+		}
+	} catch (error) {
+		return {
+			// @ts-expect-error
+			error: error.message
+		}
+	}
 }

@@ -13,6 +13,10 @@ import Link from 'next/link'
 import { app } from '@/app/treaty'
 import { DeleteForm } from '@/components/delete-form'
 
+export const metadata = {
+	title: 'Exercises'
+}
+
 export default async function Exercises() {
 	const { data, error } = await app.api.exercises.index.get()
 	if (error) {
