@@ -32,10 +32,14 @@ export function DeleteForm({
 	const { handleResponse } = useErrorOrRedirect()
 
 	const handleDelete = async () => {
+		let response = { error: null }
 		switch (apiRouteKey) {
+			case 'exercise-events':
+				response = await app.api['exercise-events']({ id }).delete()
+				handleResponse(response.error, '/exercise-sessions')
 			default:
-				const { error } = await app.api.exercises({ id }).delete()
-				handleResponse(error, '/exercises')
+				response = await app.api.exercises({ id }).delete()
+				handleResponse(response.error, '/exercises')
 		}
 	}
 

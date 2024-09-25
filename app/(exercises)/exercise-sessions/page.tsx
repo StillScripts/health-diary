@@ -12,8 +12,8 @@ import { format, parse } from 'date-fns'
 import { formatDate } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { DeleteExerciseEventButton } from '@/app/(exercises)/_components/buttons/delete-exercise-event'
 import { app } from '@/app/treaty'
+import { DeleteForm } from '@/components/delete-form'
 
 export const metadata = {
 	title: 'Exercise Sessions'
@@ -76,7 +76,7 @@ export default async function ExerciseSessions() {
 									</Button>
 								</TableCell>
 								<TableCell>
-									<DeleteExerciseEventButton exerciseEvent={event} />
+									<DeleteForm id={event.id} apiRouteKey="exercise-events" />
 								</TableCell>
 							</TableRow>
 						))}
