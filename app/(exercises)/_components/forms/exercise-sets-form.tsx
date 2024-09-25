@@ -94,6 +94,7 @@ export function ExerciseSetsForm({
 	)
 
 	async function onSubmit(data: ExerciseSetSchema) {
+		// @ts-ignore
 		await upsertExerciseSets({ ...data, exerciseEventId })
 			.then(d => {
 				console.log(JSON.stringify(d))
@@ -145,6 +146,7 @@ export function ExerciseSetsForm({
 														</SelectTrigger>
 													</FormControl>
 													<SelectContent>
+														{/** @ts-expect-error */}
 														{exercises.map(exercise => (
 															<SelectItem key={exercise.id} value={exercise.id}>
 																{exercise.title}

@@ -7,7 +7,7 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator
 } from '@/components/ui/breadcrumb'
-//import { Route } from 'next'
+import type { Route } from 'next'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Fragment } from 'react'
@@ -52,7 +52,7 @@ export const ExerciseBreadcrumbs = () => {
 						{breadcrumb?.href ? (
 							<BreadcrumbItem>
 								<BreadcrumbLink asChild>
-									<Link href={breadcrumb.href}>{breadcrumb.name}</Link>
+									<Link href={breadcrumb.href as Route}>{breadcrumb.name}</Link>
 								</BreadcrumbLink>
 							</BreadcrumbItem>
 						) : (
