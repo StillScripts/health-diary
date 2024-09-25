@@ -22,8 +22,17 @@ export function createClient() {
 }
 
 export async function getServerUser() {
-	const supabase = createClient()
-	return await supabase.auth.getUser()
+	try {
+		const supabase = createClient()
+		const user = await supabase.auth.getUser()
+		if (user?.data?.user) {
+			return user
+		}
+		return null
+	} catch (error) {
+		console.log(error)
+		return null
+	}
 }
 
 export type SupabaseSession = Awaited<ReturnType<typeof getServerUser>>
