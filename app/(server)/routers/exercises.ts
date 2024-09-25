@@ -6,10 +6,12 @@ import { exercises } from '@/db/schema'
 import CRUDController from '@/lib/crud-controller'
 import { nanoid, withoutId } from '@/lib/utils'
 
+const prefix = '/exercises'
+
 /** Control how the application can interact with the `exercises` model */
 class ExercisesController extends CRUDController<typeof exercises> {
 	constructor() {
-		super(exercises)
+		super(exercises, prefix)
 	}
 
 	async featured() {
@@ -23,7 +25,7 @@ const insertSchema = createInsertSchema(exercises)
 const selectSchema = createSelectSchema(exercises)
 
 /** Handle routes for the `exercises` model */
-export const exercisesRouter = new Elysia({ prefix: '/exercises' })
+export const exercisesRouter = new Elysia({ prefix })
 	.decorate({
 		ExercisesController: new ExercisesController()
 	})
@@ -48,7 +50,10 @@ export const exercisesRouter = new Elysia({ prefix: '/exercises' })
 	.post(
 		'/',
 		async ({ ExercisesController, body }) => {
-			await ExercisesController.create({ id: `ex_${nanoid(10)}`, ...body })
+			return await ExercisesController.create({
+				id: `ex_${nanoid(10)}`,
+				...body
+			})
 		},
 		{
 			body: withoutId(insertSchema)

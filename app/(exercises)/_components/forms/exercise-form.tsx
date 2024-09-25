@@ -36,12 +36,16 @@ import {
 import { SubmittingButton } from '@/components/pending-button'
 import { FormToast } from '@/components/form-toast'
 import { app } from '@/app/treaty'
+import { useErrorOrRedirect } from '@/lib/hooks/use-error-or-redirect'
+import { useUserSession } from '@/lib/supabase/user-context'
 
 export function ExerciseForm({
 	exercise
 }: {
 	exercise?: NonNullable<Exercise>
 }) {
+	const { user } = useUserSession()
+
 	const form = useForm<ExerciseSchema>({
 		resolver: zodResolver(exerciseSchema),
 		defaultValues: {
@@ -50,20 +54,27 @@ export function ExerciseForm({
 			activityType: exercise?.activityType ?? 'Body Weight'
 		}
 	})
+	const { handleResponse } = useErrorOrRedirect()
 
+	/** Create or update an exercise entry */
 	async function onSubmit(userData: ExerciseSchema) {
+		const userId = user?.data?.user?.id
+		if (!userId) {
+			throw new Error('Unauthenticated')
+		}
+
 		if (!exercise?.id) {
-			// this is where we could create
-			alert('creating')
-			//const { data, error } = await app.api.exercises.index.post(userData)
-			//console.log(error)
+			const { error } = await app.api.exercises.index.post({
+				...userData,
+				userId
+			})
+
+			handleResponse(error, '/exercises')
 		} else {
-			alert('trying')
-			// this is where we can update
-			const { data, error } = await app.api
+			const { error } = await app.api
 				.exercises({ id: exercise.id })
 				.patch(userData)
-			console.log(error)
+			handleResponse(error, '/exercises')
 		}
 	}
 
